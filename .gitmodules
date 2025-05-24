@@ -1,0 +1,4 @@
+[submodule "UECustom"]
+	path = UECustom
+	url = git@github.com:kojeomstudio/UnrealEngine-Custom.git
+	branch = release

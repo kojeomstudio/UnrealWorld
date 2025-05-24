@@ -2,7 +2,7 @@
 
 # 현재 스크립트가 위치한 디렉토리를 기준으로 경로 설정
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-GENERATOR_FILE_PATH="$SCRIPT_DIR/../../GenerateProjectFiles.command"
+GENERATOR_FILE_PATH="$SCRIPT_DIR./UECustom/GenerateProjectFiles.command"
 
 # UnrealWorld.uproject 경로 설정
 UPROJECT_PATH="$SCRIPT_DIR/UnrealWorld.uproject"
