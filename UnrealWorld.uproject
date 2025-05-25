@@ -26,5 +26,6 @@
 			"Name": "TestPlugin",
 			"Enabled": true
 		}
-	]
+	],
+	"EngineDir": "UECustom/Engine"
 }

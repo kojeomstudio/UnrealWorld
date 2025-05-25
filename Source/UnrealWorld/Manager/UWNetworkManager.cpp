@@ -33,7 +33,7 @@ void UUWNetworkManager::Generate(const FString& InQuery, FOllamaAPIResDelegate I
 #else
 	APIUrl = FGameConfigManager::GetStringValue(FString(TEXT("OllamaAPI")), FString(TEXT("Live")));
 #endif
-	FString TargetURL = FString::Printf(TEXT("%s/api/generate"), APIUrl);
+	FString TargetURL = FString::Printf(TEXT("%s/api/generate"), *APIUrl);
 
 	const FString& Model = FGameConfigManager::GetStringValue(FString(TEXT("OllamaAPI")), FString(TEXT("Model")));
 
@@ -79,7 +79,7 @@ void UUWNetworkManager::OnResponse_Generate(FHttpRequestPtr Request, FHttpRespon
 {
 	if (bWasSuccessful && Response.IsValid())
 	{
-		UE_LOG(LogTemp, Log, TEXT("Ollama ?臾먮뼗: %s"), *Response->GetContentAsString());
+		UE_LOG(LogTemp, Log, TEXT("Ollama Response >>> %s"), *Response->GetContentAsString());
 
 		if (FOllamaAPIResDelegate* Find = RequestToCallbackMap.Find(Request))
 		{

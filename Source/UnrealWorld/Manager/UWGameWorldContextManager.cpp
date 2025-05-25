@@ -45,16 +45,16 @@ void UUWGameWorldContextManager::DispatchToAI(const FLLMCommand& Command, AAICon
 		return;
 	}
 
-	switch (Command.CommandType)
+	switch (Command.GetCommandType())
 	{
 	case ELLMCommandType::MoveTo:
-		BB->SetValueAsName(TEXT("TargetName"), FName(*Command.Target));
+		BB->SetValueAsName(TEXT("TargetName"), FName(*Command.GetTarget()));
 		break;
 	case ELLMCommandType::Attack:
 		BB->SetValueAsBool(TEXT("ShouldAttack"), true);
 		break;
 	case ELLMCommandType::PlayAnimation:
-		BB->SetValueAsName(TEXT("AnimationName"), FName(*Command.Target));
+		BB->SetValueAsName(TEXT("AnimationName"), FName(*Command.GetTarget()));
 		break;
 	case ELLMCommandType::Speak:
 		// Custom dialogue logic

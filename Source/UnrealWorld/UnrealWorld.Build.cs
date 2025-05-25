@@ -24,8 +24,9 @@ public class UnrealWorld : ModuleRules
 			"PakFile",
 			"HTTP" ,
 			"Json",
-			"JsonUtilities"
-		});
+			"JsonUtilities",
+            "AIModule"
+        });
 		
 		// Uncomment if you are using online features
 		// PrivateDependencyModuleNames.Add("OnlineSubsystem");

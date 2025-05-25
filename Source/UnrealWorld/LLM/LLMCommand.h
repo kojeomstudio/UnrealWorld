@@ -23,6 +23,17 @@ public:
 		return CommandType != ELLMCommandType::Unknown;
 	}
 
+	ELLMCommandType GetCommandType() const
+	{
+		return CommandType;
+	}
+
+	const FString& GetTarget() const
+	{
+		return Target;
+	}
+
+
 private:
 	ELLMCommandType CommandType = ELLMCommandType::Unknown;
 	FString Target;
