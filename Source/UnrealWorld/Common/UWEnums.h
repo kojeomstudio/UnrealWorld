@@ -4,6 +4,9 @@
 
 #include "CoreMinimal.h"
 
+/// <summary>
+/// LLMCommand <--> AICommand
+/// </summary>
 UENUM(BlueprintType)
 enum class ELLMCommandType : uint8
 {
@@ -11,6 +14,7 @@ enum class ELLMCommandType : uint8
 	MoveTo      UMETA(DisplayName = "Move To"),
 	Attack      UMETA(DisplayName = "Attack"),
 	PlayAnimation UMETA(DisplayName = "Play Animation"),
-	Speak       UMETA(DisplayName = "Speak")
+	Speak       UMETA(DisplayName = "Speak"),
+	Patrol       UMETA(DisplayName = "Patrol"),
 };
 

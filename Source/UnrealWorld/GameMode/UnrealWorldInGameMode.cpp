@@ -8,6 +8,7 @@
 
 #include "UnrealWorld/Common/UWEssentialHeaders.h"
 #include "UnrealWorld/Manager/UWGameCameraManager.h"
+#include "UnrealWorld/Manager/UWGameWorldContextManager.h"
 
 #include "UnrealWorld/Data/UWGameBPAsset.h"
 
@@ -17,15 +18,20 @@ void AUnrealWorldInGameMode::InitGame(const FString& MapName, const FString& Opt
 {
 	Super::InitGame(MapName, Options, ErrorMessage);
 
-	UE_LOG(LogTemp, Log, TEXT("AUnrealWorldInGameMode::InitGame [MapName : %s]"), *MapName);
+	UE_LOG(LogTemp, Log, TEXT("AUnrealWorldInGameMode::InitGame() >>> [MapName : %s]"), *MapName);
 
+}
+
+void AUnrealWorldInGameMode::Tick(float DeltaSeconds)
+{
+	Super::Tick(DeltaSeconds);
 }
 
 void AUnrealWorldInGameMode::StartPlay()
 {
 	Super::StartPlay();
 
-	UE_LOG(LogTemp, Log, TEXT("AUnrealWorldInGameMode::StartPlay"));
+	UE_LOG(LogTemp, Log, TEXT("AUnrealWorldInGameMode::StartPlay()"));
 
 	FGameCameraInitParams Params
 	(
@@ -34,4 +40,24 @@ void AUnrealWorldInGameMode::StartPlay()
 	);
 
 	UW::Get<UUWGameCameraManager>().SpawnCamera(Params);
+
+	//
+	if (UWorld* TargetWorld = GetWorld())
+	{
+		TargetWorld->GetTimerManager().SetTimer(
+			WorldContextUpdateHandle,
+			this,
+			&AUnrealWorldInGameMode::UpdateContext,
+			60.0f,
+			true
+		);
+	}
+}
+
+void AUnrealWorldInGameMode::UpdateContext()
+{
+	UE_LOG(LogTemp, Log, TEXT("AUnrealWorldInGameMode::UpdateContext()"));
+
+	UUWGameWorldContextManager& WorldContextManager = UW::Get<UUWGameWorldContextManager>();
+	WorldContextManager.Update();
 }

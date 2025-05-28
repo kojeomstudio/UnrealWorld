@@ -11,8 +11,11 @@
 
 // LLM
 #include "UnrealWorld/LLM/LLMCommandParser.h"
-
+#include "UnrealWorld/LLM/LLMPrompt.h"
 // ~LLM
+
+#include "UnrealWorld/UWPlatformGameInstance.h"
+#include "UnrealWorld/Manager/UWNetworkManager.h"
 
 void UUWGameWorldContextManager::Init()
 {
@@ -63,4 +66,28 @@ void UUWGameWorldContextManager::DispatchToAI(const FLLMCommand& Command, AAICon
 		UE_LOG(LogTemp, Warning, TEXT("Unknown command type"));
 		break;
 	}
+}
+
+void UUWGameWorldContextManager::Update()
+{
+	// update world context to llm
+
+	UE_LOG(LogTemp, Log, TEXT("UUWGameWorldContextManager::Update()"));
+
+	UUWNetworkManager& NetworkManager = UW::Get<UUWNetworkManager>();
+
+	/*FOllamaAPIResDelegate Callback;
+	Callback.BindLambda([](FString& InResult) {
+		UE_LOG(LogTemp, Log, TEXT("UUWNetworkManager >>> Generate Response : %s"), *InResult);
+	});*/
+
+	FOllamaAPIResDelegate Callback;
+	Callback.BindUObject(this, &UUWGameWorldContextManager::Update_Internal);
+
+	NetworkManager.Request_Generate(FString(), Callback);
+}
+
+void UUWGameWorldContextManager::Update_Internal(const FString& InResult)
+{
+	UE_LOG(LogTemp, Log, TEXT("UUWGameWorldContextManager >>> Update_Internal() : %s"), *InResult);
 }

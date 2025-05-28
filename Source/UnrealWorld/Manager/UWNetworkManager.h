@@ -33,7 +33,7 @@ public:
 public:
 
 	//UFUNCTION(BlueprintCallable, Category = "OllamaAPI")
-	void Generate(const FString& InQuery, FOllamaAPIResDelegate InCallback);
+	void Request_Generate(const FString& InQuery, FOllamaAPIResDelegate InCallback);
 
 private:
 	void OnResponse_Generate(FHttpRequestPtr Request, FHttpResponsePtr Response, bool bWasSuccessful);

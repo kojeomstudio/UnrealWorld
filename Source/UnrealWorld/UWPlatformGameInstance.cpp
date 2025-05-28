@@ -100,6 +100,10 @@ void UUWPlatformGameInstance::InitDataAssets()
 {
 	DataAssets.Empty();
 
+	//
+	// must check to working in package build.
+	//
+
 	const FString FolderPath = TEXT("/Game/DataAsset/");
 
 	UObjectLibrary* ObjectLibrary = UObjectLibrary::CreateLibrary(UObject::StaticClass(), true, false);

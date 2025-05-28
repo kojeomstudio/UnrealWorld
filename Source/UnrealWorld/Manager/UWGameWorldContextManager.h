@@ -32,6 +32,11 @@ public:
 public:
 	void Parse(const FString& InContent);
 	void DispatchToAI(const FLLMCommand& Command, AAIController* Controller);
+	void Update();
+
+private:
+	UFUNCTION()
+	void Update_Internal(const FString& InResult);
 
 private:
 	TUniquePtr<FLLMCommandParser> CommandParser;

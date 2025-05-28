@@ -7,6 +7,24 @@ void FMoveToCommand::Execute(AAIController* Controller)
 {
 	if (UBlackboardComponent* BB = Controller->GetBlackboardComponent())
 	{
+		BB->SetValueAsBool("IsPatrol", false);
 		BB->SetValueAsName("TargetName", FName(*Target));
+	}
+}
+
+void FAttackCommand::Execute(AAIController* Controller)
+{
+	if (UBlackboardComponent* BB = Controller->GetBlackboardComponent())
+	{
+		BB->SetValueAsBool("IsPatrol", false);
+		BB->SetValueAsName("TargetName", FName(*Target));
+	}
+}
+
+void FPatrolCommand::Execute(AAIController* Controller)
+{
+	if (UBlackboardComponent* BB = Controller->GetBlackboardComponent())
+	{
+		BB->SetValueAsBool("IsPatrol", true);
 	}
 }

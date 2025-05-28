@@ -25,10 +25,10 @@ void UUWNetworkManager::Release()
 }
 
 
-void UUWNetworkManager::Generate(const FString& InQuery, FOllamaAPIResDelegate InCallback)
+void UUWNetworkManager::Request_Generate(const FString& InQuery, FOllamaAPIResDelegate InCallback)
 {
 	FString APIUrl;
-#if (!UE_BUILD_SHIPPING)
+#if !UE_BUILD_SHIPPING
 	APIUrl = FGameConfigManager::GetStringValue(FString(TEXT("OllamaAPI")), FString(TEXT("Dev")));
 #else
 	APIUrl = FGameConfigManager::GetStringValue(FString(TEXT("OllamaAPI")), FString(TEXT("Live")));
