@@ -6,7 +6,10 @@
 #include "UObject/NoExportTypes.h"
 #include "UnrealWorld/Manager/UWManagerBase.h"
 
+// LLM
 #include "UnrealWorld/LLM/LLMCommand.h"
+#include "UnrealWorld/LLM/LLMCommandParser.h"
+// ~LLM
 
 #include "UWGameWorldContextManager.generated.h"
 
@@ -31,7 +34,6 @@ public:
 
 public:
 	void Parse(const FString& InContent);
-	void DispatchToAI(const FLLMCommand& Command, AAIController* Controller);
 	void Update();
 
 private:

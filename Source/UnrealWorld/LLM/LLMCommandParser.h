@@ -9,7 +9,7 @@ class FLLMCommandParser
 {
 public:
 	FLLMCommandParser() = default;
-	~FLLMCommandParser() = default;
+	~FLLMCommandParser();
 
 public:
 	// Parses JSON string into FLLMCommand

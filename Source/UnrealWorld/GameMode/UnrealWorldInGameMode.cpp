@@ -58,7 +58,7 @@ void AUnrealWorldInGameMode::StartPlay()
 			WorldContextUpdateHandle,
 			this,
 			&AUnrealWorldInGameMode::UpdateContext,
-			60.0f,
+			10.0f,
 			true
 		);
 	}

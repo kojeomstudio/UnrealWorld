@@ -17,16 +17,25 @@ ELLMCommandType StringToCommandType(const FString& InStr)
 	{
 		return ELLMCommandType::Attack;
 	}
-	else if (InStr.Equals("PlayAnimation", ESearchCase::IgnoreCase))
+	else if (InStr.Equals("SpeakTo", ESearchCase::IgnoreCase))
 	{
-		return ELLMCommandType::PlayAnimation;
+		return ELLMCommandType::SpeakTo;
 	}
-	else if (InStr.Equals("Speak", ESearchCase::IgnoreCase))
+	else if (InStr.Equals("Patrol", ESearchCase::IgnoreCase))
 	{
-		return ELLMCommandType::Speak;
+		return ELLMCommandType::Patrol;
+	}
+	else if (InStr.Equals("Idle", ESearchCase::IgnoreCase))
+	{
+		return ELLMCommandType::Idle;
 	}
 
 	return ELLMCommandType::Unknown;
+}
+
+FLLMCommandParser::~FLLMCommandParser()
+{
+	// to do
 }
 
 bool FLLMCommandParser::Parse(const FString& JsonText, FLLMCommand& OutCommand)
