@@ -16,6 +16,9 @@
 
 #include "UnrealWorld/UWPlatformGameInstance.h"
 #include "UnrealWorld/Manager/UWNetworkManager.h"
+#include "UnrealWorld/Manager/UWGameActorManager.h"
+
+#include "UnrealWorld/Character/UWActorBase.h"
 
 void UUWGameWorldContextManager::Init()
 {
@@ -82,12 +85,28 @@ void UUWGameWorldContextManager::Update()
 	});*/
 
 	FOllamaAPIResDelegate Callback;
-	Callback.BindUObject(this, &UUWGameWorldContextManager::Update_Internal);
+	Callback.BindUObject(this, &UUWGameWorldContextManager::OnUpdate_Internal);
 
-	NetworkManager.Request_Generate(FString(), Callback);
+	TArray<TPair<FString, FString>> ActorInfos;
+
+	UUWGameActorManager& GameActorManager = UW::Get<UUWGameActorManager>();
+	for (const TPair<FGuid, AUWActorBase*>& Pair : GameActorManager.GetSpawnedActors())
+	{
+		const FGuid& Id = Pair.Key;
+		if (const AUWActorBase* Actor = Pair.Value)
+		{
+			ActorInfos.Add(TPair<FString, FString>(Id.ToString(), Actor->GetName()));
+		}
+	}
+
+	const FString& SystemPrompt = FGameWorldContextPrompt::GetSystemPrompt();
+	const FString& ContextPrompt = FGameWorldContextPrompt::BuildUserPrompt(ActorInfos);
+	const FString ResultPrompt = FString::Printf(TEXT("%s %s"), *SystemPrompt, *ContextPrompt);
+	
+	NetworkManager.Request_Generate(ResultPrompt, Callback);
 }
 
-void UUWGameWorldContextManager::Update_Internal(const FString& InResult)
+void UUWGameWorldContextManager::OnUpdate_Internal(const FString& InResult)
 {
-	UE_LOG(LogTemp, Log, TEXT("UUWGameWorldContextManager >>> Update_Internal() : %s"), *InResult);
+	UE_LOG(LogTemp, Log, TEXT("UUWGameWorldContextManager >>> OnUpdate_Internal() : %s"), *InResult);
 }

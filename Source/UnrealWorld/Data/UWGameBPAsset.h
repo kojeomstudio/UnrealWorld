@@ -10,6 +10,8 @@ class APlayerGameCharacter;
 class ASpectatorCameraActor;
 class APlayerGameCameraActor;
 class AUWPlayerSpectator;
+class AUWGameMonster;
+class AUWGameNpc;
 
 /**
  * 
@@ -18,7 +20,6 @@ UCLASS()
 class UNREALWORLD_API UUWGameBPAsset : public UUWGameDataAssetBase
 {
 	GENERATED_BODY()
-	
 
 public:
 	UPROPERTY(Category = Player, EditDefaultsOnly)
@@ -28,4 +29,10 @@ public:
 
 	UPROPERTY(Category = Player, EditAnywhere)
 	TSubclassOf<APlayerGameCameraActor> PlayerGameCameraActorBP;
+
+	UPROPERTY(Category = Actor, EditDefaultsOnly)
+	TSoftClassPtr<AUWGameNpc> GameNPCAsset;
+
+	UPROPERTY(Category = Actor, EditDefaultsOnly)
+	TSoftClassPtr<AUWGameMonster> GameMonsterAsset;
 };

@@ -36,7 +36,7 @@ public:
 
 private:
 	UFUNCTION()
-	void Update_Internal(const FString& InResult);
+	void OnUpdate_Internal(const FString& InResult);
 
 private:
 	TUniquePtr<FLLMCommandParser> CommandParser;

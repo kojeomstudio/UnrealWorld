@@ -9,6 +9,7 @@
 #include "UnrealWorld/Common/UWEssentialHeaders.h"
 #include "UnrealWorld/Manager/UWGameCameraManager.h"
 #include "UnrealWorld/Manager/UWGameWorldContextManager.h"
+#include "UnrealWorld/Manager/UWGameActorManager.h"
 
 #include "UnrealWorld/Data/UWGameBPAsset.h"
 
@@ -33,15 +34,24 @@ void AUnrealWorldInGameMode::StartPlay()
 
 	UE_LOG(LogTemp, Log, TEXT("AUnrealWorldInGameMode::StartPlay()"));
 
-	FGameCameraInitParams Params
-	(
-		FTransform::Identity,
-		UW::GetDataAsset<UUWGameBPAsset>().PlayerGameCameraActorBP
-	);
+	// Player Camaera
+	{
+		FGameCameraInitParams Params
+		(
+			FTransform::Identity,
+			UW::GetDataAsset<UUWGameBPAsset>().PlayerGameCameraActorBP
+		);
 
-	UW::Get<UUWGameCameraManager>().SpawnCamera(Params);
+		UW::Get<UUWGameCameraManager>().SpawnCamera(Params);
+	}
+	
 
-	//
+#if WITH_EDITOR
+	UUWGameActorManager& GameActorManager = UW::Get<UUWGameActorManager>();
+	GameActorManager.Spawn_Test();
+#endif
+
+	// Game World Context Update Init.
 	if (UWorld* TargetWorld = GetWorld())
 	{
 		TargetWorld->GetTimerManager().SetTimer(

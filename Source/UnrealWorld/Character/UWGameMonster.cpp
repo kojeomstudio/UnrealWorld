@@ -1,11 +1,11 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "GameMonster.h"
+#include "UWGameMonster.h"
 #include "Runtime/Engine/Classes/Components/SkeletalMeshComponent.h"
 
 // Sets default values
-AGameMonster::AGameMonster()
+AUWGameMonster::AUWGameMonster()
 {
  	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
@@ -28,7 +28,7 @@ AGameMonster::AGameMonster()
 }
 
 // Called when the game starts or when spawned
-void AGameMonster::BeginPlay()
+void AUWGameMonster::BeginPlay()
 {
 	Super::BeginPlay();
 	
@@ -75,14 +75,14 @@ void AGameMonster::BeginPlay()
 }
 
 // Called every frame
-void AGameMonster::Tick(float DeltaTime)
+void AUWGameMonster::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
 }
 
 // Called to bind functionality to input
-void AGameMonster::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
+void AUWGameMonster::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 
