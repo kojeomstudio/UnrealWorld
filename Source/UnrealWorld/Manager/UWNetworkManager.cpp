@@ -27,6 +27,9 @@ void UUWNetworkManager::Release()
 
 void UUWNetworkManager::Request_Generate(const FString& InQuery, FOllamaAPIResDelegate InCallback)
 {
+	// ollama api
+	// https://github.com/ollama/ollama/blob/main/docs/api.md
+
 	FString APIUrl;
 #if !UE_BUILD_SHIPPING
 	APIUrl = FGameConfigManager::GetStringValue(FString(TEXT("OllamaAPI")), FString(TEXT("Dev")));
@@ -48,6 +51,7 @@ void UUWNetworkManager::Request_Generate(const FString& InQuery, FOllamaAPIResDe
 	TSharedPtr<FJsonObject> JsonObject = MakeShareable(new FJsonObject);
 	JsonObject->SetStringField("model", Model);
 	JsonObject->SetStringField("prompt", InQuery);
+	JsonObject->SetBoolField("stream", false);
 
 	FString RequestBody;
 	TSharedRef<TJsonWriter<>> Writer = TJsonWriterFactory<>::Create(&RequestBody);

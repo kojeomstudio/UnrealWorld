@@ -6,7 +6,7 @@
 #include "Engine/DataAsset.h"
 #include "UWGameDataAssetBase.generated.h"
 
-class APlayerGameCharacter;
+class AUWPlayerCharacter;
 class ASpectatorCameraActor;
 class APlayerGameCameraActor;
 class AUWPlayerSpectator;

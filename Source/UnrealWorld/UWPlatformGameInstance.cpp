@@ -15,7 +15,7 @@
 #include "Runtime/AssetRegistry/Public/AssetRegistry/AssetRegistryModule.h"
 #include "Runtime/Engine/Classes/Engine/ObjectLibrary.h"
 
-#include "UnrealWorld/Character/PlayerGameCharacter.h"
+#include "UnrealWorld/Character/UWPlayerCharacter.h"
 #include "UnrealWorld/UWPlayerController.h"
 
 #include "UnrealWorld/Config/UWGameIniConfig.h"
@@ -48,11 +48,11 @@ void UUWPlatformGameInstance::Shutdown()
 	GameIniConfig = nullptr;
 }
 
-APlayerGameCharacter* UUWPlatformGameInstance::GetMyPawn()
+AUWPlayerCharacter* UUWPlatformGameInstance::GetMyPawn()
 {
 	if (AUWPlayerController* MyPlayerController = GetMyController())
 	{
-		return Cast<APlayerGameCharacter>(MyPlayerController->GetPawn()); // get possesed pawn. ( my )
+		return Cast<AUWPlayerCharacter>(MyPlayerController->GetPawn()); // get possesed pawn. ( my )
 	}
 
 	return nullptr;

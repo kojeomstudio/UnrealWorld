@@ -44,3 +44,24 @@ public:
 public:
 	virtual void Execute(AAIController* Controller) override;
 };
+
+class FIdleCommand : public FBaseAICommand
+{
+public:
+	explicit FIdleCommand(const FString& InTarget) {}
+
+public:
+	virtual void Execute(AAIController* Controller) override;
+};
+
+class FSpeakToCommand : public FBaseAICommand
+{
+public:
+	explicit FSpeakToCommand(const FString& InTarget) {}
+
+public:
+	virtual void Execute(AAIController* Controller) override;
+
+private:
+	FString Target;
+};

@@ -28,3 +28,20 @@ void FPatrolCommand::Execute(AAIController* Controller)
 		BB->SetValueAsBool("IsPatrol", true);
 	}
 }
+
+void FIdleCommand::Execute(AAIController* Controller)
+{
+	if (UBlackboardComponent* BB = Controller->GetBlackboardComponent())
+	{
+		BB->SetValueAsBool("IsIdle", true);
+	}
+}
+
+void FSpeakToCommand::Execute(AAIController* Controller)
+{
+	if (UBlackboardComponent* BB = Controller->GetBlackboardComponent())
+	{
+		BB->SetValueAsBool("IsSpeakTo", true);
+		BB->SetValueAsName("TargetName", FName(*Target));
+	}
+}

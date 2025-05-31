@@ -54,25 +54,20 @@ bool FLLMCommandParser::Parse(const FString& JsonText, TArray<FLLMCommand>& OutC
         return false; // "Decisions" 필드 없음
     }
 
-    bool bAllValid = true;
-
     for (const TSharedPtr<FJsonValue>& ItemValue : *DecisionsArray)
     {
         const TSharedPtr<FJsonObject>* ItemObject;
         if (ItemValue->TryGetObject(ItemObject) == false)
         {
-            bAllValid = false;
             continue;
         }
 
-        FString Name, Action;
-        int32 ID;
+        FString Name, Action, UniqueId;
 
-        if ((*ItemObject)->TryGetNumberField(TEXT("ID"), ID) == false ||
+        if ((*ItemObject)->TryGetStringField(TEXT("UniqueId"), UniqueId) == false ||
             (*ItemObject)->TryGetStringField(TEXT("Name"), Name) == false ||
             (*ItemObject)->TryGetStringField(TEXT("Action"), Action) == false)
         {
-            bAllValid = false;
             continue;
         }
 
@@ -80,18 +75,15 @@ bool FLLMCommandParser::Parse(const FString& JsonText, TArray<FLLMCommand>& OutC
         Command.Make
         (
             StringToCommandType(Action),
-            Name
+            Name,
+            UniqueId
         );
 
         if (Command.IsValid() == true)
         {
             OutCommands.Add(Command);
         }
-        else
-        {
-            bAllValid = false;
-        }
     }
 
-    return (bAllValid == true) && (OutCommands.Num() > 0);
+    return (OutCommands.Num() > 0);
 }

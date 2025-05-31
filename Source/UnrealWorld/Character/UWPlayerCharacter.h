@@ -5,10 +5,10 @@
 #include "CoreMinimal.h"
 //#include "GameFramework/Pawn.h"
 #include "Runtime/Engine/Classes/GameFramework/Character.h"
-#include "PlayerGameCharacter.generated.h"
+#include "UWPlayerCharacter.generated.h"
 
 UCLASS()
-class UNREALWORLD_API APlayerGameCharacter : public ACharacter
+class UNREALWORLD_API AUWPlayerCharacter : public ACharacter
 {
 	GENERATED_BODY()
 
@@ -16,7 +16,7 @@ protected:
 	
 
 public:
-	APlayerGameCharacter(const FObjectInitializer& ObjectInitializer = FObjectInitializer::Get());
+	AUWPlayerCharacter(const FObjectInitializer& ObjectInitializer = FObjectInitializer::Get());
 
 protected:
 	// Called when the game starts or when spawned

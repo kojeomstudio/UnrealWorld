@@ -1,6 +1,6 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
-#include "PlayerGameCharacter.h"
+#include "UWPlayerCharacter.h"
 
 #include "UnrealWorld/GameMode/UnrealWorldInGameMode.h"
 
@@ -13,7 +13,7 @@
 
 #include "UnrealWorld/UWPlayerController.h"
 
-APlayerGameCharacter::APlayerGameCharacter(const FObjectInitializer& ObjectInitializer)
+AUWPlayerCharacter::AUWPlayerCharacter(const FObjectInitializer& ObjectInitializer)
 	: Super(ObjectInitializer)
 {
 	// Set this pawn to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
@@ -23,7 +23,7 @@ APlayerGameCharacter::APlayerGameCharacter(const FObjectInitializer& ObjectIniti
 }
  
 // Called when the game starts or when spawned
-void APlayerGameCharacter::BeginPlay()
+void AUWPlayerCharacter::BeginPlay()
 {
 	Super::BeginPlay();
 
@@ -32,30 +32,30 @@ void APlayerGameCharacter::BeginPlay()
 }
 
 // Called every frame
-void APlayerGameCharacter::Tick(float DeltaTime)
+void AUWPlayerCharacter::Tick(float DeltaTime)
 {
 
 }
 
 // Called to bind functionality to input
-void APlayerGameCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
+void AUWPlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 
-	InputComponent->BindAxis(TEXT("MoveForward"), this, &APlayerGameCharacter::OnMoveForward);
-	InputComponent->BindAxis(TEXT("MoveRight"), this, &APlayerGameCharacter::OnMoveRight);
+	InputComponent->BindAxis(TEXT("MoveForward"), this, &AUWPlayerCharacter::OnMoveForward);
+	InputComponent->BindAxis(TEXT("MoveRight"), this, &AUWPlayerCharacter::OnMoveRight);
 
-	InputComponent->BindTouch(IE_Pressed, this, &APlayerGameCharacter::OnTouchPressed);
-	InputComponent->BindTouch(IE_Repeat, this, &APlayerGameCharacter::OnTouchRepeated);
-	InputComponent->BindTouch(IE_Released, this, &APlayerGameCharacter::OnTouchReleased);
+	InputComponent->BindTouch(IE_Pressed, this, &AUWPlayerCharacter::OnTouchPressed);
+	InputComponent->BindTouch(IE_Repeat, this, &AUWPlayerCharacter::OnTouchRepeated);
+	InputComponent->BindTouch(IE_Released, this, &AUWPlayerCharacter::OnTouchReleased);
 }
 
-void APlayerGameCharacter::Serialize(FArchive& Ar)
+void AUWPlayerCharacter::Serialize(FArchive& Ar)
 {
 	Super::Serialize(Ar);
 }
 
-void APlayerGameCharacter::OnMoveForward(float Value)
+void AUWPlayerCharacter::OnMoveForward(float Value)
 {
 	if (Value != 0.0f)
 	{
@@ -74,7 +74,7 @@ void APlayerGameCharacter::OnMoveForward(float Value)
 	}
 }
 
-void APlayerGameCharacter::OnMoveRight(float Value)
+void AUWPlayerCharacter::OnMoveRight(float Value)
 {
 	if (Value != 0.0f)
 	{
@@ -93,17 +93,17 @@ void APlayerGameCharacter::OnMoveRight(float Value)
 	}
 }
 
-void APlayerGameCharacter::OnTouchPressed(ETouchIndex::Type InIndex, FVector InLocation)
+void AUWPlayerCharacter::OnTouchPressed(ETouchIndex::Type InIndex, FVector InLocation)
 {
 	UW::Get<UUWGameScreenTouchManager>().OnTouchPressed(InIndex, InLocation);
 }
 
-void APlayerGameCharacter::OnTouchRepeated(ETouchIndex::Type InIndex, FVector InLocation)
+void AUWPlayerCharacter::OnTouchRepeated(ETouchIndex::Type InIndex, FVector InLocation)
 {
 	UW::Get<UUWGameScreenTouchManager>().OnTouchRepeated(InIndex, InLocation);
 }
 
-void APlayerGameCharacter::OnTouchReleased(ETouchIndex::Type InIndex, FVector InLocation)
+void AUWPlayerCharacter::OnTouchReleased(ETouchIndex::Type InIndex, FVector InLocation)
 {
 	UW::Get<UUWGameScreenTouchManager>().OnTouchReleased(InIndex, InLocation);
 }

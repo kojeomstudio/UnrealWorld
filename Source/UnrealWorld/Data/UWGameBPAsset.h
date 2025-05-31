@@ -6,7 +6,7 @@
 #include "UnrealWorld/Data/UWGameDataAssetBase.h"
 #include "UWGameBPAsset.generated.h"
 
-class APlayerGameCharacter;
+class AUWPlayerCharacter;
 class ASpectatorCameraActor;
 class APlayerGameCameraActor;
 class AUWPlayerSpectator;

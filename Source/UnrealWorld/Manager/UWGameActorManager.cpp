@@ -10,7 +10,12 @@
 
 #include "UnrealWorld/UWPlatformGameInstance.h"
 #include "UnrealWorld/Data/UWGameBPAsset.h"
+
 #include "UnrealWorld/Character/UWActorBase.h"
+#include "UnrealWorld/Character/UWGameNpc.h"
+#include "UnrealWorld/Character/UWGameMonster.h"
+#include "UnrealWorld/Character/UWPlayerSpectator.h"
+#include "UnrealWorld/Character/UWPlayerCharacter.h"
 
 void UUWGameActorManager::Init()
 {
@@ -37,7 +42,7 @@ void UUWGameActorManager::Spawn_Test()
 
 	FSpawnParams_Internal Test_SpawnParam0;
 
-	Test_SpawnParam0.Class = BPAsset.GameNPCAsset.Get();
+	Test_SpawnParam0.Class = BPAsset.GameNPCAsset.LoadSynchronous();
 	Test_SpawnParam0.Location = FVector::ZeroVector;
 	Test_SpawnParam0.Rotation = FRotator::ZeroRotator;
 

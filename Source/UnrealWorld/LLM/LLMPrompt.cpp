@@ -18,9 +18,9 @@ Respond with the following JSON structure:
 {
   "Decisions": [
     {
-      "ID": <int>,                // Unique number assigned to the actor
+      "UniqueId": "<string>",                // Unique number assigned to the actor
       "Name": "<string>",         // Actor name
-      "Action": "<enum: Attack | Patrol | Move>" // One of the allowed actions
+      "Action": "<enum: Attack | Patrol | MoveTo | SpeakTo | Idle>" // One of the allowed actions
     },
     ...
   ]
@@ -37,7 +37,7 @@ FString FGameWorldContextPrompt::BuildUserPrompt(const TArray<TPair<FString, FSt
     for (int32 Index = 0; Index < ActorNameAndStateList.Num(); ++Index)
     {
         const TPair<FString, FString>& Pair = ActorNameAndStateList[Index];
-        ContextSection += FString::Printf(TEXT("%d. %s: %s\n"), Index + 1, *Pair.Key, *Pair.Value);
+        ContextSection += FString::Printf(TEXT("Index : %d, Actor Unique Id : %s, Actor State : %s\n"), Index + 1, *Pair.Key, *Pair.Value);
     }
 
     ContextSection += TEXT("\nDecide the appropriate action for each actor based on the state provided above.");

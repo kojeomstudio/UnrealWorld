@@ -14,7 +14,7 @@ public:
 
 	
 public:
-	void Make(EActorStateType InCommandType, const FString& InTarget);
+	void Make(EActorStateType InCommandType, const FString& InTarget, const FString& InUniqueId);
 
 public:
 
@@ -33,9 +33,15 @@ public:
 		return Target;
 	}
 
+	const FString& GetUniqueId() const
+	{
+		return UniqueId;
+	}
+
 
 private:
 	EActorStateType CommandType = EActorStateType::Unknown;
 	FString Target;
+	FString UniqueId;
 };
 

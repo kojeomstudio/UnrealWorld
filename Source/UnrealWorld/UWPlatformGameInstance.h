@@ -10,7 +10,7 @@ class UUWGameBPAsset;
 class UUWManagerBase;
 class UClass;
 class UDataAsset;
-class APlayerGameCharacter; // main pawn.
+class AUWPlayerCharacter; // main pawn.
 class AUWPlayerController;
 class UUWGameIniConfig;
 /**
@@ -49,7 +49,7 @@ public:
 		return *(static_cast<T*>(Data));
 	}
 
-	APlayerGameCharacter* GetMyPawn();
+	AUWPlayerCharacter* GetMyPawn();
 	AUWPlayerController* GetMyController();
 
 	UUWGameIniConfig* GetGameIniConfig();
