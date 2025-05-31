@@ -1,6 +1,6 @@
 #include "LLMCommand.h"
 
-void FLLMCommand::Make(ELLMCommandType InCommandType, const FString& InTarget)
+void FLLMCommand::Make(EActorStateType InCommandType, const FString& InTarget)
 {
 	CommandType = InCommandType;
 	Target = InTarget;

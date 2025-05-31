@@ -15,7 +15,7 @@ AUWActorBase::AUWActorBase()
 void AUWActorBase::BeginPlay()
 {
 	Super::BeginPlay();
-	
+	CurrentStateType = EActorStateType::Idle;
 }
 
 // Called every frame
@@ -30,5 +30,10 @@ void AUWActorBase::SetupPlayerInputComponent(UInputComponent* PlayerInputCompone
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 
+}
+
+void AUWActorBase::ChangeState(EActorStateType InStateType)
+{
+	CurrentStateType = InStateType;
 }
 

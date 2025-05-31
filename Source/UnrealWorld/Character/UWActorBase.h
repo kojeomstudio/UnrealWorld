@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
+#include "UnrealWorld/Common/UWEnums.h"
 #include "UWActorBase.generated.h"
 
 class USkeletalMeshComponent;
@@ -29,16 +30,32 @@ public:
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
 public:
+	UFUNCTION(BlueprintCallable, Category = "UWActorBase_BP")
+	void ChangeState(EActorStateType InStateType);
+
+	// setters.
+public:
 	void SetGuId(const FGuid& InGuid)
 	{
 		Id = InGuid;
 	}
 
+	// getters.
+public:
+
+	UFUNCTION(BlueprintCallable, Category = "UWActorBase_BP")
 	const FGuid& GetGuId()
 	{
 		return Id;
 	}
 
+	UFUNCTION(BlueprintCallable, Category = "UWActorBase_BP")
+	const EActorStateType GetStateType()
+	{
+		return CurrentStateType;
+	}
+
 protected:
 	FGuid Id;
+	EActorStateType CurrentStateType = EActorStateType::Unknown;
 };

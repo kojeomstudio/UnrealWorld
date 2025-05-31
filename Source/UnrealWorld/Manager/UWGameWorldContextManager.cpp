@@ -34,15 +34,6 @@ void UUWGameWorldContextManager::Release()
 	CommandParser.Reset();
 }
 
-void UUWGameWorldContextManager::Parse(const FString& InContent)
-{
-	// In response handler
-	FLLMCommand ParsedCommand;
-	if (CommandParser->Parse(InContent, ParsedCommand))
-	{
-	}
-}
-
 void UUWGameWorldContextManager::Update()
 {
 	// update world context to llm
@@ -81,4 +72,10 @@ void UUWGameWorldContextManager::Update()
 void UUWGameWorldContextManager::OnUpdate_Internal(const FString& InResult)
 {
 	UE_LOG(LogTemp, Log, TEXT("UUWGameWorldContextManager >>> OnUpdate_Internal() : %s"), *InResult);
+
+	// 여러 Actor에 대한 명령들을 분리해서 적용해야함..
+	FLLMCommand ParsedCommand;
+	if (CommandParser->Parse(InResult, ParsedCommand))
+	{
+	}
 }

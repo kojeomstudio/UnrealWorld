@@ -4,7 +4,7 @@
 
 #include "UnrealWorld/Common/UWEnums.h"
 
-enum class ELLMCommandType : uint8;
+enum class EActorStateType : uint8;
 
 class FLLMCommand
 {
@@ -14,16 +14,16 @@ public:
 
 	
 public:
-	void Make(ELLMCommandType InCommandType, const FString& InTarget);
+	void Make(EActorStateType InCommandType, const FString& InTarget);
 
 public:
 
 	bool IsValid() const
 	{
-		return CommandType != ELLMCommandType::Unknown;
+		return CommandType != EActorStateType::Unknown;
 	}
 
-	ELLMCommandType GetCommandType() const
+	EActorStateType GetCommandType() const
 	{
 		return CommandType;
 	}
@@ -35,7 +35,7 @@ public:
 
 
 private:
-	ELLMCommandType CommandType = ELLMCommandType::Unknown;
+	EActorStateType CommandType = EActorStateType::Unknown;
 	FString Target;
 };
 

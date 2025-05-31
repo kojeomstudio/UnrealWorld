@@ -7,30 +7,30 @@
 #include "UnrealWorld/Common/UWEnums.h"
 #include "UnrealWorld/AI/AICommands.h"
 
-ELLMCommandType StringToCommandType(const FString& InStr)
+EActorStateType StringToCommandType(const FString& InStr)
 {
 	if (InStr.Equals("MoveTo", ESearchCase::IgnoreCase))
 	{
-		return ELLMCommandType::MoveTo;
+		return EActorStateType::MoveTo;
 	}
 	else if (InStr.Equals("Attack", ESearchCase::IgnoreCase))
 	{
-		return ELLMCommandType::Attack;
+		return EActorStateType::Attack;
 	}
 	else if (InStr.Equals("SpeakTo", ESearchCase::IgnoreCase))
 	{
-		return ELLMCommandType::SpeakTo;
+		return EActorStateType::SpeakTo;
 	}
 	else if (InStr.Equals("Patrol", ESearchCase::IgnoreCase))
 	{
-		return ELLMCommandType::Patrol;
+		return EActorStateType::Patrol;
 	}
 	else if (InStr.Equals("Idle", ESearchCase::IgnoreCase))
 	{
-		return ELLMCommandType::Idle;
+		return EActorStateType::Idle;
 	}
 
-	return ELLMCommandType::Unknown;
+	return EActorStateType::Unknown;
 }
 
 FLLMCommandParser::~FLLMCommandParser()
@@ -38,43 +38,60 @@ FLLMCommandParser::~FLLMCommandParser()
 	// to do
 }
 
-bool FLLMCommandParser::Parse(const FString& JsonText, FLLMCommand& OutCommand)
+bool FLLMCommandParser::Parse(const FString& JsonText, TArray<FLLMCommand>& OutCommands)
 {
-	TSharedPtr<FJsonObject> JsonObject;
-	TSharedRef<TJsonReader<>> Reader = TJsonReaderFactory<>::Create(JsonText);
+    TSharedPtr<FJsonObject> RootObject;
+    TSharedRef<TJsonReader<>> Reader = TJsonReaderFactory<>::Create(JsonText);
 
-	if (FJsonSerializer::Deserialize(Reader, JsonObject) && JsonObject.IsValid())
-	{
-		OutCommand.Make
-		(
-			StringToCommandType(JsonObject->GetStringField("command")),
-			JsonObject->GetStringField("target")
-		);
+    if (FJsonSerializer::Deserialize(Reader, RootObject) == false || RootObject.IsValid() == false)
+    {
+        return false; // JSON 파싱 실패
+    }
 
-		// Return true only if the command has valid structure
-		return OutCommand.IsValid();
-	}
+    const TArray<TSharedPtr<FJsonValue>>* DecisionsArray;
+    if (RootObject->TryGetArrayField(TEXT("Decisions"), DecisionsArray) == false)
+    {
+        return false; // "Decisions" 필드 없음
+    }
 
-	// Parsing failed
-	return false;
-}
+    bool bAllValid = true;
 
-TSharedPtr<FBaseAICommand> FLLMCommandParser::ParseToCommandObject(const FString& JsonText)
-{
-	TSharedPtr<FJsonObject> JsonObject;
-	TSharedRef<TJsonReader<>> Reader = TJsonReaderFactory<>::Create(JsonText);
+    for (const TSharedPtr<FJsonValue>& ItemValue : *DecisionsArray)
+    {
+        const TSharedPtr<FJsonObject>* ItemObject;
+        if (ItemValue->TryGetObject(ItemObject) == false)
+        {
+            bAllValid = false;
+            continue;
+        }
 
-	if (FJsonSerializer::Deserialize(Reader, JsonObject) && JsonObject.IsValid())
-	{
-		const FString Type = JsonObject->GetStringField("command");
-		const FString Target = JsonObject->GetStringField("target");
+        FString Name, Action;
+        int32 ID;
 
-		if (Type == "MoveTo")
-		{
-			return MakeShared<FMoveToCommand>(Target);
-		}
-		// Other types can follow...
-	}
+        if ((*ItemObject)->TryGetNumberField(TEXT("ID"), ID) == false ||
+            (*ItemObject)->TryGetStringField(TEXT("Name"), Name) == false ||
+            (*ItemObject)->TryGetStringField(TEXT("Action"), Action) == false)
+        {
+            bAllValid = false;
+            continue;
+        }
 
-	return nullptr;
+        FLLMCommand Command;
+        Command.Make
+        (
+            StringToCommandType(Action),
+            Name
+        );
+
+        if (Command.IsValid() == true)
+        {
+            OutCommands.Add(Command);
+        }
+        else
+        {
+            bAllValid = false;
+        }
+    }
+
+    return (bAllValid == true) && (OutCommands.Num() > 0);
 }

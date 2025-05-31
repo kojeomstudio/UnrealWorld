@@ -33,7 +33,6 @@ public:
 	virtual void Release() override;
 
 public:
-	void Parse(const FString& InContent);
 	void Update();
 
 private:

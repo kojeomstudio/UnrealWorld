@@ -13,8 +13,5 @@ public:
 
 public:
 	// Parses JSON string into FLLMCommand
-	bool Parse(const FString& JsonText, FLLMCommand& OutCommand);
-
-public:
-	TSharedPtr<FBaseAICommand> ParseToCommandObject(const FString& JsonText);
+	bool Parse(const FString& JsonText, TArray<FLLMCommand>& OutCommands);
 };

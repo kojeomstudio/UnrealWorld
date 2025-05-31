@@ -8,13 +8,13 @@
 /// LLMCommand <--> AICommand <--> ActorState
 /// </summary>
 UENUM(BlueprintType)
-enum class ELLMCommandType : uint8
+enum class EActorStateType : uint8
 {
 	Unknown     UMETA(DisplayName = "Unknown"),
-	MoveTo      UMETA(DisplayName = "Move To"),
+	MoveTo      UMETA(DisplayName = "MoveTo"),
 	Attack      UMETA(DisplayName = "Attack"),
-	SpeakTo       UMETA(DisplayName = "SpeakTo"),
-	Patrol       UMETA(DisplayName = "Patrol"),
-	Idle UMETA(DisplayName = "Idle"),
+	SpeakTo     UMETA(DisplayName = "SpeakTo"),
+	Patrol      UMETA(DisplayName = "Patrol"),
+	Idle		UMETA(DisplayName = "Idle"),
 };
 

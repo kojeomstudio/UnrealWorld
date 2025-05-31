@@ -10,6 +10,7 @@
 #include "UnrealWorld/Manager/UWGameCameraManager.h"
 #include "UnrealWorld/Manager/UWGameWorldContextManager.h"
 #include "UnrealWorld/Manager/UWGameActorManager.h"
+#include "UnrealWorld/Config/UWGameConfigManager.h"
 
 #include "UnrealWorld/Data/UWGameBPAsset.h"
 
@@ -54,11 +55,13 @@ void AUnrealWorldInGameMode::StartPlay()
 	// Game World Context Update Init.
 	if (UWorld* TargetWorld = GetWorld())
 	{
+		const float IntervalTimeSec = FGameConfigManager::GetFloatValue(FString(TEXT("AI")), FString(TEXT("RequestGenIntervalTimeSec")));
+
 		TargetWorld->GetTimerManager().SetTimer(
 			WorldContextUpdateHandle,
 			this,
 			&AUnrealWorldInGameMode::UpdateContext,
-			10.0f,
+			IntervalTimeSec,
 			true
 		);
 	}
