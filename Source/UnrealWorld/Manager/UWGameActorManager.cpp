@@ -16,9 +16,19 @@
 #include "UnrealWorld/Character/UWGameMonster.h"
 #include "UnrealWorld/Character/UWPlayerSpectator.h"
 #include "UnrealWorld/Character/UWPlayerCharacter.h"
+#include "UnrealWorld/AI/AICommands.h"
+#include "UnrealWorld/AI/UWAIController.h"
+
+#include "UnrealWorld/Manager/UWGameWorldContextManager.h"
 
 void UUWGameActorManager::Init()
 {
+}
+
+void UUWGameActorManager::PostInit()
+{
+	UUWGameWorldContextManager& WorldContextManager = UW::Get<UUWGameWorldContextManager>();
+	OnUpdateWorldContextHandle = WorldContextManager.OnUpdateWorldContext.AddUObject(this, &UUWGameActorManager::OnUpdateWorldContext);
 }
 
 void UUWGameActorManager::Tick(float InDeltaTime)
@@ -28,6 +38,9 @@ void UUWGameActorManager::Tick(float InDeltaTime)
 void UUWGameActorManager::Release()
 {
 	SpawnedActors.Empty();
+
+	UUWGameWorldContextManager& WorldContextManager = UW::Get<UUWGameWorldContextManager>();
+	WorldContextManager.OnUpdateWorldContext.Remove(OnUpdateWorldContextHandle);
 }
 
 void UUWGameActorManager::Spawn(const FTId& InTId)
@@ -71,6 +84,48 @@ void UUWGameActorManager::Spawn_Internal(const FSpawnParams_Internal& InParams)
 
 			ActorBase->SetGuId(Guid);
 			SpawnedActors.Add(Guid, ActorBase);
+		}
+	}
+}
+
+void UUWGameActorManager::OnUpdateWorldContext(const TArray<FLLMCommand>& InCommands)
+{
+	for (const FLLMCommand& Command : InCommands)
+	{
+		if (AUWActorBase* FindActor = *(SpawnedActors.Find(FGuid(Command.GetUniqueId()))))
+		{
+			if (AUWAIController* AIController = Cast<AUWAIController>(FindActor->GetController()))
+			{
+				FBaseAICommand* AICommand = nullptr;
+				// Apply command to the actor
+				switch (Command.GetCommandType())
+				{
+				case EActorStateType::Attack:
+					AICommand = new FAttackCommand(Command.GetTarget());
+					break;
+				case EActorStateType::Patrol:
+					AICommand = new FPatrolCommand(Command.GetTarget());
+					break;
+				case EActorStateType::MoveTo:
+					AICommand = new FMoveToCommand(Command.GetTarget());
+					break;
+				case EActorStateType::SpeakTo:
+					AICommand = new FSpeakToCommand(Command.GetTarget());
+					break;
+				case EActorStateType::Idle:
+					AICommand = new FIdleCommand(Command.GetTarget());
+					break;
+				}
+
+				if (AICommand != nullptr)
+				{
+					AICommand->Execute(AIController);
+				}
+			}
+			else
+			{
+				UE_LOG(LogTemp, Warning, TEXT("Actor %s does not have a valid AIController."), *FindActor->GetName());
+			}
 		}
 	}
 }

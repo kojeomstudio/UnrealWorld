@@ -9,7 +9,7 @@
 #include "Runtime/Engine/Classes/GameFramework/PlayerController.h"
 #include "Runtime/Engine/Classes/Camera/CameraComponent.h"
 
-#include "UnrealWorld/Character/PlayerGameCharacter.h"
+#include "UnrealWorld/Character/UWPlayerCharacter.h"
 #include "UnrealWorld/UWPlayerController.h"
 
 #include "UnrealWorld/Manager/UWGameScreenTouchManager.h"

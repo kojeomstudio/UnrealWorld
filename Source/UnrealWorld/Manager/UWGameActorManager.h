@@ -7,6 +7,10 @@
 #include "UnrealWorld/Manager/UWManagerBase.h"
 #include "UnrealWorld/Data/UWData.h"
 
+// LLM
+#include "UnrealWorld/LLM/LLMCommand.h"
+// ~LLM
+
 #include "UWGameActorManager.generated.h"
 
 class AAIController;
@@ -36,6 +40,7 @@ private:
 public:
 	// Inherited via UUWManagerBase
 	virtual void Init() override;
+	virtual void PostInit() override;
 	virtual void Tick(float InDeltaTime) override;
 	virtual void Release() override;
 
@@ -54,8 +59,11 @@ public:
 
 private:
 	void Spawn_Internal(const FSpawnParams_Internal& InParams);
+	void OnUpdateWorldContext(const TArray<FLLMCommand>& InCommands);
 
 private:
 	UPROPERTY(Transient)
 	TMap<FGuid, AUWActorBase*> SpawnedActors;
+
+	FDelegateHandle OnUpdateWorldContextHandle;
 };

@@ -18,6 +18,7 @@
 #include "UnrealWorld/Manager/UWGameActorManager.h"
 #include "UnrealWorld/Character/UWActorBase.h"
 #include "UnrealWorld/AI/AICommands.h"
+#include "UnrealWorld/AI/UWAIController.h"
 
 void UUWGameWorldContextManager::Init()
 {
@@ -73,52 +74,10 @@ void UUWGameWorldContextManager::OnUpdate_Internal(const FString& InResult)
 {
 	UE_LOG(LogTemp, Log, TEXT("UUWGameWorldContextManager >>> OnUpdate_Internal() : %s"), *InResult);
 
-	// 여러 Actor에 대한 명령들을 분리해서 적용해야함..
 	TArray<FLLMCommand> OutParsedCommands;
 	if (CommandParser->Parse(InResult, OutParsedCommands))
 	{
-		UUWGameActorManager& GameActorManager = UW::Get<UUWGameActorManager>();
-		const TMap<FGuid, AUWActorBase*>& Actors = GameActorManager.GetSpawnedActors();
-
-		for (const FLLMCommand& Command : OutParsedCommands)
-		{
-			if (AUWActorBase* FindActor = *(Actors.Find(FGuid(Command.GetUniqueId()))))
-			{
-				if (AAIController* Controller = Cast<AAIController>(FindActor->GetController()))
-				{
-					FBaseAICommand* AICommand = nullptr;
-					// Apply command to the actor
-					switch (Command.GetCommandType())
-					{
-					case EActorStateType::Attack:
-						AICommand = new FAttackCommand(Command.GetTarget());
-						break;
-					case EActorStateType::Patrol:
-						AICommand = new FPatrolCommand(Command.GetTarget());
-						break;
-					case EActorStateType::MoveTo:
-						AICommand = new FMoveToCommand(Command.GetTarget());
-						break;
-					case EActorStateType::SpeakTo:
-						AICommand = new FSpeakToCommand(Command.GetTarget());
-						break;
-					case EActorStateType::Idle:
-						AICommand = new FIdleCommand(Command.GetTarget());
-						break;
-					}
-
-					if (AICommand != nullptr)
-					{
-						AICommand->Execute(Controller);
-					}
-				}
-				else
-				{
-					UE_LOG(LogTemp, Warning, TEXT("Actor %s does not have a valid AIController."), *FindActor->GetName());
-				}
-			}
-			
-		}
+		OnUpdateWorldContext.Broadcast(OutParsedCommands);
 	}
 	else
 	{

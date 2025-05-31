@@ -7,7 +7,7 @@
 #include "Runtime/Engine/Classes/GameFramework/PlayerController.h"
 #include "Runtime/Engine/Classes/Camera/CameraComponent.h"
 
-#include "UnrealWorld/Character/PlayerGameCharacter.h"
+#include "UnrealWorld/Character/UWPlayerCharacter.h"
 #include "UnrealWorld/UWPlayerController.h"
 
 #include "Runtime/Core/Public/Internationalization/Internationalization.h"

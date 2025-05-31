@@ -59,9 +59,8 @@ void UUWNetworkManager::Request_Generate(const FString& InQuery, FOllamaAPIResDe
 
 	Request->SetContentAsString(RequestBody);
 
-	//Request->OnProcessRequestComplete().BindUObject(this, &UUWNetworkManager::OnResponse_Generate);
-
-	Request->OnProcessRequestComplete().BindLambda(
+	Request->OnProcessRequestComplete().BindUObject(this, &UUWNetworkManager::OnResponse_Generate);
+	/*Request->OnProcessRequestComplete().BindLambda(
 		[InCallback](FHttpRequestPtr Request, FHttpResponsePtr Response, bool bWasSuccessful)
 		{
 			if (bWasSuccessful && Response.IsValid())
@@ -74,26 +73,81 @@ void UUWNetworkManager::Request_Generate(const FString& InQuery, FOllamaAPIResDe
 				InCallback.ExecuteIfBound(TEXT("ERROR"));
 			}
 		}
-	);
+	);*/
 
 	Request->ProcessRequest();
 }
 
 void UUWNetworkManager::OnResponse_Generate(FHttpRequestPtr Request, FHttpResponsePtr Response, bool bWasSuccessful)
 {
-	if (bWasSuccessful && Response.IsValid())
+	if (!bWasSuccessful || !Response.IsValid())
 	{
-		UE_LOG(LogTemp, Log, TEXT("Ollama Response >>> %s"), *Response->GetContentAsString());
+		UE_LOG(LogTemp, Error, TEXT("OnResponse_Generate() >>> HTTP request failed or invalid response."));
+		RequestToCallbackMap.Remove(Request);
+		return;
+	}
 
-		if (FOllamaAPIResDelegate* Find = RequestToCallbackMap.Find(Request))
+	const FString RawContent = Response->GetContentAsString();
+	UE_LOG(LogTemp, Log, TEXT("Ollama Raw Response >>> %s"), *RawContent);
+
+	// 1차 JSON 파싱
+	TSharedPtr<FJsonObject> RootObject;
+	TSharedRef<TJsonReader<>> Reader = TJsonReaderFactory<>::Create(RawContent);
+
+	if (!FJsonSerializer::Deserialize(Reader, RootObject) || !RootObject.IsValid())
+	{
+		UE_LOG(LogTemp, Error, TEXT("Failed to parse JSON root from Ollama response."));
+		RequestToCallbackMap.Remove(Request);
+		return;
+	}
+
+	FOllamaResponseParsed Parsed;
+	RootObject->TryGetStringField(TEXT("model"), Parsed.Model);
+	RootObject->TryGetStringField(TEXT("created_at"), Parsed.CreatedAt);
+	RootObject->TryGetBoolField(TEXT("done"), Parsed.bDone);
+	RootObject->TryGetStringField(TEXT("done_reason"), Parsed.DoneReason);
+	RootObject->TryGetNumberField(TEXT("total_duration"), Parsed.TotalDuration);
+	RootObject->TryGetNumberField(TEXT("load_duration"), Parsed.LoadDuration);
+	RootObject->TryGetNumberField(TEXT("prompt_eval_count"), Parsed.PromptEvalCount);
+	RootObject->TryGetNumberField(TEXT("prompt_eval_duration"), Parsed.PromptEvalDuration);
+	RootObject->TryGetNumberField(TEXT("eval_count"), Parsed.EvalCount);
+	RootObject->TryGetNumberField(TEXT("eval_duration"), Parsed.EvalDuration);
+
+	const TArray<TSharedPtr<FJsonValue>>* ContextArray;
+	if (RootObject->TryGetArrayField(TEXT("context"), ContextArray))
+	{
+		for (const TSharedPtr<FJsonValue>& Value : *ContextArray)
 		{
-			Find->ExecuteIfBound(Response->GetContentAsString());
+			int32 Token;
+			if (Value->TryGetNumber(Token))
+			{
+				Parsed.Context.Add(Token);
+			}
 		}
 	}
-	else
+
+	// "response" 필드: JSON 문자열이 마크다운으로 감싸져 있음
+	if (!RootObject->TryGetStringField(TEXT("response"), Parsed.Response))
 	{
-		UE_LOG(LogTemp, Error, TEXT("OnResponse_Generate() >>> Error"));
+		UE_LOG(LogTemp, Warning, TEXT("Missing 'response' field in Ollama JSON."));
+		RequestToCallbackMap.Remove(Request);
+		return;
+	}
+
+	// 마크다운 제거
+	Parsed.Response.ReplaceInline(TEXT("```json\n"), TEXT(""));
+	Parsed.Response.ReplaceInline(TEXT("```"), TEXT(""));
+	Parsed.Response.TrimStartAndEndInline();
+
+	UE_LOG(LogTemp, Log, TEXT("Ollama Cleaned Response >>> %s"), *Parsed.Response);
+
+	// 파싱된 JSON 응답을 delegate로 전달
+	if (FOllamaAPIResDelegate* Find = RequestToCallbackMap.Find(Request))
+	{
+		Find->ExecuteIfBound(Parsed.Response);
 	}
 
 	RequestToCallbackMap.Remove(Request);
 }
+
+

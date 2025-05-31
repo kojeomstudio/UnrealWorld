@@ -75,6 +75,7 @@ void UUWPlatformGameInstance::InitManagers()
 {
 	Managers.Empty();
 
+	// Init.
 	for (UClass* Class : TObjectRange<UClass>())
 	{
 		if (Class)
@@ -88,6 +89,12 @@ void UUWPlatformGameInstance::InitManagers()
 				}
 			}
 		}
+	}
+
+	// Post Init.
+	for (TPair<UClass*, UUWManagerBase*>& Pair : Managers)
+	{
+		Pair.Value->PostInit();
 	}
 }
 

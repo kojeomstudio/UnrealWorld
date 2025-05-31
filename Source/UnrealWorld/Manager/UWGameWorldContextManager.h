@@ -20,6 +20,8 @@ class AAIController;
  * 
  */
 
+DECLARE_MULTICAST_DELEGATE_OneParam(FOnUpdateWorldContext, const TArray<FLLMCommand>&)
+
 
 UCLASS()
 class UNREALWORLD_API UUWGameWorldContextManager : public UUWManagerBase
@@ -34,6 +36,9 @@ public:
 
 public:
 	void Update();
+
+public:
+	FOnUpdateWorldContext OnUpdateWorldContext;
 
 private:
 	UFUNCTION()
