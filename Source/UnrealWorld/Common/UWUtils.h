@@ -46,7 +46,7 @@ namespace UWUtils
 	 * @param Color The color of the message.
 	 * @param LogCategory The log category used with UE_LOG.
 	 */
-	FORCEINLINE void DebugLogToScreen(const FString& Message, int32 Key = -1, float Duration = 5.0f, FColor Color = FColor::Green, const FName& LogCategory = TEXT("UWUtils"))
+	FORCEINLINE void DebugLogToScreen(const FString& Message, int32 Key = -1, float Duration = 5.0f, FColor Color = FColor::Green, const FName& LogCategory = TEXT("Log"))
 	{
 #if !(UE_BUILD_SHIPPING)
 		if (GEngine)

@@ -7,14 +7,15 @@
 
 #include "UnrealWorld/AI/UWAIController.h"
 #include "UnrealWorld/Common/UWUtils.h"
+#include "UnrealWorld/Character/UWActorBase.h"
 
 void FUWActorStateMachine::ChangeState(const EActorStateType InStateType)
 {
-	if (CurrentState.IsValid() && CurrentStateType == InStateType)
-	{
-		// Already in the requested state, no need to change.
-		return;
-	}
+	//if (CurrentState.IsValid() && CurrentStateType == InStateType)
+	//{
+	//	// Already in the requested state, no need to change.
+	//	return;
+	//}
 
 	if (CurrentState.IsValid())
 	{
@@ -45,6 +46,12 @@ void FUWActorStateMachine::ChangeState(const EActorStateType InStateType)
 	{
 		CurrentStateType = InStateType;
 		CurrentState->Start();
+
+#if WITH_EDITOR
+		UWUtils::DebugLogToScreen(
+			FString::Printf(TEXT("[Actor StateMachine] \n UId : %s \n State : %s"),
+				*(OwnerActor->GetGuId().ToString()), *UWUtils::EnumToString(InStateType)), 1, 5.0f,	FColor::Emerald);
+#endif
 	}
 	else
 	{

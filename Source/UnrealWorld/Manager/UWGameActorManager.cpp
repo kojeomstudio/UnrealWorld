@@ -19,6 +19,8 @@
 #include "UnrealWorld/AI/AICommands.h"
 #include "UnrealWorld/AI/UWAIController.h"
 
+#include "UnrealWorld/Common/UWUtils.h"
+
 #include "UnrealWorld/Manager/UWGameWorldContextManager.h"
 
 void UUWGameActorManager::Init()
@@ -96,6 +98,8 @@ void UUWGameActorManager::Spawn_Internal(const FSpawnParams_Internal& InParams)
 				InParams.RunAnim,
 				InParams.AttackAnim
 			));
+			ActorBase->ChangeState(EActorStateType::Idle);
+
 			SpawnedActors.Add(Guid, ActorBase);
 		}
 	}
@@ -103,6 +107,20 @@ void UUWGameActorManager::Spawn_Internal(const FSpawnParams_Internal& InParams)
 
 void UUWGameActorManager::OnUpdateWorldContext(const TArray<FLLMCommand>& InCommands)
 {
+#if WITH_EDITOR
+	int32 KeyIndex = 0;
+	for (const FLLMCommand& Command : InCommands)
+	{
+		UWUtils::DebugLogToScreen(
+			FString::Printf(TEXT("[Log] LLM Command \n Type : %s \n UId : %s \n Target : %s \n Reason : %s"),
+				*UWUtils::EnumToString(Command.GetCommandType()), *Command.GetUniqueId(),
+				*Command.GetTarget(), *Command.GetReason()),
+			++KeyIndex,
+			5.0f,
+			FColor::Green);
+	}
+#endif
+
 	for (const FLLMCommand& Command : InCommands)
 	{
 		if (AUWActorBase* FindActor = *(SpawnedActors.Find(FGuid(Command.GetUniqueId()))))

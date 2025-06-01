@@ -38,13 +38,9 @@ private:
 		FRotator Rotation;
 		EActorClassType ActorClassType = EActorClassType::Novice; // Default to Novice
 
-		UPROPERTY(Transient)
 		TObjectPtr<UAnimSequenceBase> IdleAnim;
-		UPROPERTY(Transient)
 		TObjectPtr<UAnimSequenceBase> WalkAnim;
-		UPROPERTY(Transient)
 		TObjectPtr<UAnimSequenceBase> RunAnim;
-		UPROPERTY(Transient)
 		TObjectPtr<UAnimSequenceBase> AttackAnim;
 	};
 	

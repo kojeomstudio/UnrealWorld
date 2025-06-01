@@ -14,11 +14,8 @@ class USkeletalMeshComponent;
 class UAnimSequence;
 class UAnimSequenceBase;
 
-USTRUCT()
 struct FActorAnimationData
 {
-	GENERATED_BODY()
-
 public:
 	FActorAnimationData() = default;
 	FActorAnimationData(UAnimSequenceBase* InIdleAnim, UAnimSequenceBase* InWalkAnim, UAnimSequenceBase* InRunAnim, UAnimSequenceBase* InAttackAnim)
@@ -116,6 +113,5 @@ protected:
 	TUniquePtr<FUWActorStateMachine> StateMachine;
 	TObjectPtr<USkeletalMeshComponent> SkeletalMeshComponent = nullptr;
 
-	UPROPERTY(Transient)
 	FActorAnimationData AnimationData;
 };

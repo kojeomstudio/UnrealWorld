@@ -35,9 +35,6 @@ void AUWActorBase::BeginPlay()
 {
 	Super::BeginPlay();
 
-	// default to idle state.
-	ChangeState(EActorStateType::Idle);
-
 	if (AUWAIController* AIController = Cast<AUWAIController>(GetController()))
 	{
 		if (UBrainComponent* BrainComp = AIController->GetBrainComponent())
@@ -110,7 +107,7 @@ void AUWActorBase::PlayAnimation(UAnimSequenceBase* InAnimSequence, const float 
 
     UAnimMontage* TempMontage = UAnimMontage::CreateSlotAnimationAsDynamicMontage(
         InAnimSequence,
-        FName("DefaultSlot"),
+        FName("DefaultSlot"), // (anim bp에서 default slot 설정 필요)
         0.0f,
         0.2f,
         InRate,
@@ -123,7 +120,7 @@ void AUWActorBase::PlayAnimation(UAnimSequenceBase* InAnimSequence, const float 
         return;
     }
 
-    // Montage 재생
+    // Montage
     float Duration = AnimInstance->Montage_Play(TempMontage, InRate);
     if (Duration <= 0.f)
     {
