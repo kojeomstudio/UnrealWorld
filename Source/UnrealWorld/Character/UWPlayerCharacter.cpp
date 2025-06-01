@@ -14,11 +14,10 @@
 #include "UnrealWorld/UWPlayerController.h"
 
 AUWPlayerCharacter::AUWPlayerCharacter(const FObjectInitializer& ObjectInitializer)
-	: Super(ObjectInitializer)
+: Super(ObjectInitializer)
 {
 	// Set this pawn to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
-
 	MoveSpeed = 500.0f;
 }
  

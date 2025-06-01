@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "UnrealWorld/Data/UWGameDataAssetBase.h"
+#include "UnrealWorld/Common/UWEnums.h"
 #include "UWGameBPAsset.generated.h"
 
 class AUWPlayerCharacter;
@@ -12,6 +13,31 @@ class APlayerGameCameraActor;
 class AUWPlayerSpectator;
 class AUWGameMonster;
 class AUWGameNpc;
+class AUWActorBase;
+class UAnimSequence;
+
+USTRUCT(BlueprintType)
+struct FActorBPData
+{
+	GENERATED_BODY()
+public:
+	UPROPERTY(EditDefaultsOnly)
+	TSoftClassPtr<AUWActorBase> DefaultAsset;
+	UPROPERTY(EditDefaultsOnly)
+	EActorClassType DefaultClass;
+
+	UPROPERTY(EditDefaultsOnly)
+	TObjectPtr<UAnimSequenceBase> IdleAnim;
+
+	UPROPERTY(EditDefaultsOnly)
+	TObjectPtr<UAnimSequenceBase> WalkAnim;
+
+	UPROPERTY(EditDefaultsOnly)
+	TObjectPtr<UAnimSequenceBase> RunAnim;
+
+	UPROPERTY(EditDefaultsOnly)
+	TObjectPtr<UAnimSequenceBase> AttackAnim;
+};
 
 /**
  * 
@@ -31,8 +57,11 @@ public:
 	TSubclassOf<APlayerGameCameraActor> PlayerGameCameraActorBP;
 
 	UPROPERTY(Category = Actor, EditDefaultsOnly)
-	TSoftClassPtr<AUWGameNpc> GameNPCAsset;
+	FActorBPData NpcAsset;
 
 	UPROPERTY(Category = Actor, EditDefaultsOnly)
-	TSoftClassPtr<AUWGameMonster> GameMonsterAsset;
+	FActorBPData NoviceNpcAsset;
+
+	UPROPERTY(Category = Actor, EditDefaultsOnly)
+	FActorBPData MonsterAsset;
 };

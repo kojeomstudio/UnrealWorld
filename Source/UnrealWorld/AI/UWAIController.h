@@ -2,7 +2,6 @@
 
 #include "CoreMinimal.h"
 #include "Runtime/AIModule/Classes/AIController.h"
-#include "UnrealWorld/Common/UWEnums.h"
 #include "UWAIController.generated.h"
 
 UCLASS()

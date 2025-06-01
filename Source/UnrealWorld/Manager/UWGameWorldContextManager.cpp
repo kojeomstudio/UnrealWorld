@@ -20,6 +20,8 @@
 #include "UnrealWorld/AI/AICommands.h"
 #include "UnrealWorld/AI/UWAIController.h"
 
+#include "UnrealWorld/Common/UWUtils.h"
+
 void UUWGameWorldContextManager::Init()
 {
 	// In Init()
@@ -51,7 +53,7 @@ void UUWGameWorldContextManager::Update()
 	FOllamaAPIResDelegate Callback;
 	Callback.BindUObject(this, &UUWGameWorldContextManager::OnUpdate_Internal);
 
-	TArray<TPair<FString, FString>> ActorInfos;
+	TArray<FPromptActorInfo> ActorInfos;
 
 	UUWGameActorManager& GameActorManager = UW::Get<UUWGameActorManager>();
 	for (const TPair<FGuid, AUWActorBase*>& Pair : GameActorManager.GetSpawnedActors())
@@ -59,7 +61,10 @@ void UUWGameWorldContextManager::Update()
 		const FGuid& Id = Pair.Key;
 		if (const AUWActorBase* Actor = Pair.Value)
 		{
-			ActorInfos.Add(TPair<FString, FString>(Id.ToString(), Actor->GetName()));
+			const FString& StateTypeString = UWUtils::EnumToString(Actor->GetStateType());
+			const FString& ClassTypeString = UWUtils::EnumToString(Actor->GetClassType());
+
+			ActorInfos.Add(FPromptActorInfo(Id.ToString(), StateTypeString, ClassTypeString));
 		}
 	}
 

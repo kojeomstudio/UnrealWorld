@@ -55,9 +55,14 @@ void UUWGameActorManager::Spawn_Test()
 
 	FSpawnParams_Internal Test_SpawnParam0;
 
-	Test_SpawnParam0.Class = BPAsset.GameNPCAsset.LoadSynchronous();
+	Test_SpawnParam0.Class = BPAsset.NpcAsset.DefaultAsset.LoadSynchronous();
 	Test_SpawnParam0.Location = FVector::ZeroVector;
 	Test_SpawnParam0.Rotation = FRotator::ZeroRotator;
+	Test_SpawnParam0.ActorClassType = BPAsset.NpcAsset.DefaultClass;
+	Test_SpawnParam0.IdleAnim = BPAsset.NpcAsset.IdleAnim;
+	Test_SpawnParam0.WalkAnim = BPAsset.NpcAsset.WalkAnim;
+	Test_SpawnParam0.RunAnim = BPAsset.NpcAsset.RunAnim;
+	Test_SpawnParam0.AttackAnim = BPAsset.NpcAsset.AttackAnim;
 
 	Spawn_Internal(Test_SpawnParam0);
 }
@@ -83,6 +88,14 @@ void UUWGameActorManager::Spawn_Internal(const FSpawnParams_Internal& InParams)
 			const FGuid& Guid = FGuid::NewGuid();
 
 			ActorBase->SetGuId(Guid);
+			ActorBase->SetClass(InParams.ActorClassType);
+			ActorBase->SetAnimationData(FActorAnimationData
+			(
+				InParams.IdleAnim,
+				InParams.WalkAnim,
+				InParams.RunAnim,
+				InParams.AttackAnim
+			));
 			SpawnedActors.Add(Guid, ActorBase);
 		}
 	}
@@ -98,7 +111,8 @@ void UUWGameActorManager::OnUpdateWorldContext(const TArray<FLLMCommand>& InComm
 			{
 				TUniquePtr<FBaseAICommand> AICommand = nullptr;
 				// Apply command to the actor
-				switch (Command.GetCommandType())
+				EActorStateType CommandType = Command.GetCommandType();
+				switch (CommandType)
 				{
 				case EActorStateType::Attack:
 					AICommand = MakeUnique<FAttackCommand>(Command.GetTarget());
@@ -120,6 +134,7 @@ void UUWGameActorManager::OnUpdateWorldContext(const TArray<FLLMCommand>& InComm
 				if (AICommand.IsValid())
 				{
 					AICommand->Execute(AIController);
+					FindActor->ChangeState(CommandType);
 				}
 			}
 			else

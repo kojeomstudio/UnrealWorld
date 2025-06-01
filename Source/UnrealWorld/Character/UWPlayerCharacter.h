@@ -4,11 +4,12 @@
 
 #include "CoreMinimal.h"
 //#include "GameFramework/Pawn.h"
-#include "Runtime/Engine/Classes/GameFramework/Character.h"
+//#include "Runtime/Engine/Classes/GameFramework/Character.h"
+#include "UnrealWorld/Character/UWActorBase.h"
 #include "UWPlayerCharacter.generated.h"
 
 UCLASS()
-class UNREALWORLD_API AUWPlayerCharacter : public ACharacter
+class UNREALWORLD_API AUWPlayerCharacter : public AUWActorBase
 {
 	GENERATED_BODY()
 

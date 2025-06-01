@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
 #include "UnrealWorld/Manager/UWManagerBase.h"
+#include "UnrealWorld/Common/UWEnums.h"
 #include "UnrealWorld/Data/UWData.h"
 
 // LLM
@@ -35,6 +36,16 @@ private:
 		TSubclassOf<AActor> Class;
 		FVector Location;
 		FRotator Rotation;
+		EActorClassType ActorClassType = EActorClassType::Novice; // Default to Novice
+
+		UPROPERTY(Transient)
+		TObjectPtr<UAnimSequenceBase> IdleAnim;
+		UPROPERTY(Transient)
+		TObjectPtr<UAnimSequenceBase> WalkAnim;
+		UPROPERTY(Transient)
+		TObjectPtr<UAnimSequenceBase> RunAnim;
+		UPROPERTY(Transient)
+		TObjectPtr<UAnimSequenceBase> AttackAnim;
 	};
 	
 public:

@@ -14,6 +14,7 @@ void FBaseAICommand::Execute(AAIController* Controller)
 			BlackboardComp->SetValueAsBool("IsAttack", false);
 			BlackboardComp->SetValueAsBool("IsIdle", false);
 			BlackboardComp->SetValueAsBool("IsSpeakTo", false);
+			BlackboardComp->SetValueAsBool("IsMoveTo", false);
 			BlackboardComp->SetValueAsName("TargetName", FName());
 		}
 	}
@@ -27,6 +28,7 @@ void FMoveToCommand::Execute(AAIController* Controller)
 	{
 		if (UBlackboardComponent* BlackboardComp = BrainComp->GetBlackboardComponent())
 		{
+			BlackboardComp->SetValueAsBool("IsMoveTo", true);
 			BlackboardComp->SetValueAsName("TargetName", FName(*Target));
 		}
 	}
