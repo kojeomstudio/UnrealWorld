@@ -9,7 +9,7 @@ class FBaseAICommand
 {
 public:
 	virtual ~FBaseAICommand() = default;
-	virtual void Execute(AAIController* Controller) = 0;
+	virtual void Execute(AAIController* Controller);
 };
 
 class FMoveToCommand : public FBaseAICommand

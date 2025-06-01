@@ -20,7 +20,8 @@ Respond with the following JSON structure:
     {
       "UniqueId": "<string>",                // Unique number assigned to the actor
       "Name": "<string>",         // Actor name
-      "Action": "<enum: Attack | Patrol | MoveTo | SpeakTo | Idle>" // One of the allowed actions
+      "Action": "<enum: Attack | Patrol | MoveTo | SpeakTo | Idle>", // One of the allowed actions
+      "Reason": "<string>" // Reason for the action
     },
     ...
   ]

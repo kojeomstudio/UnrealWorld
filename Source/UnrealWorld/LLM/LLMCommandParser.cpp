@@ -62,11 +62,12 @@ bool FLLMCommandParser::Parse(const FString& JsonText, TArray<FLLMCommand>& OutC
             continue;
         }
 
-        FString Name, Action, UniqueId;
+        FString Name, Action, UniqueId, Reason;
 
         if ((*ItemObject)->TryGetStringField(TEXT("UniqueId"), UniqueId) == false ||
             (*ItemObject)->TryGetStringField(TEXT("Name"), Name) == false ||
-            (*ItemObject)->TryGetStringField(TEXT("Action"), Action) == false)
+            (*ItemObject)->TryGetStringField(TEXT("Action"), Action) == false ||
+            (*ItemObject)->TryGetStringField(TEXT("Reason"), Reason) == false)
         {
             continue;
         }
@@ -76,7 +77,8 @@ bool FLLMCommandParser::Parse(const FString& JsonText, TArray<FLLMCommand>& OutC
         (
             StringToCommandType(Action),
             Name,
-            UniqueId
+            UniqueId,
+            Reason
         );
 
         if (Command.IsValid() == true)

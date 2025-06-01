@@ -3,6 +3,9 @@
 
 #include "UWActorBase.h"
 #include "Runtime/Engine/Classes/Components/SkeletalMeshComponent.h"
+#include "Runtime/AIModule/Classes/BrainComponent.h"
+
+#include "UnrealWorld/AI/UWAIController.h"
 
 // Sets default values
 AUWActorBase::AUWActorBase()
@@ -18,6 +21,14 @@ void AUWActorBase::BeginPlay()
 {
 	Super::BeginPlay();
 	CurrentStateType = EActorStateType::Idle;
+
+	if (AUWAIController* AIController = Cast<AUWAIController>(GetController()))
+	{
+		if (UBrainComponent* BrainComp = AIController->GetBrainComponent())
+		{
+			BrainComp->StartLogic();
+		}
+	}
 }
 
 // Called every frame

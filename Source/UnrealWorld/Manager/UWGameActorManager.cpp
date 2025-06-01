@@ -96,28 +96,28 @@ void UUWGameActorManager::OnUpdateWorldContext(const TArray<FLLMCommand>& InComm
 		{
 			if (AUWAIController* AIController = Cast<AUWAIController>(FindActor->GetController()))
 			{
-				FBaseAICommand* AICommand = nullptr;
+				TUniquePtr<FBaseAICommand> AICommand = nullptr;
 				// Apply command to the actor
 				switch (Command.GetCommandType())
 				{
 				case EActorStateType::Attack:
-					AICommand = new FAttackCommand(Command.GetTarget());
+					AICommand = MakeUnique<FAttackCommand>(Command.GetTarget());
 					break;
 				case EActorStateType::Patrol:
-					AICommand = new FPatrolCommand(Command.GetTarget());
+					AICommand = MakeUnique<FPatrolCommand>(Command.GetTarget());
 					break;
 				case EActorStateType::MoveTo:
-					AICommand = new FMoveToCommand(Command.GetTarget());
+					AICommand = MakeUnique<FMoveToCommand>(Command.GetTarget());
 					break;
 				case EActorStateType::SpeakTo:
-					AICommand = new FSpeakToCommand(Command.GetTarget());
+					AICommand = MakeUnique<FSpeakToCommand>(Command.GetTarget());
 					break;
 				case EActorStateType::Idle:
-					AICommand = new FIdleCommand(Command.GetTarget());
+					AICommand = MakeUnique<FIdleCommand>(Command.GetTarget());
 					break;
 				}
 
-				if (AICommand != nullptr)
+				if (AICommand.IsValid())
 				{
 					AICommand->Execute(AIController);
 				}
