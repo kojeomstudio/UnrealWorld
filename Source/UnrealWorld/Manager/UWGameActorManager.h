@@ -59,7 +59,7 @@ public:
 #endif
 
 public:
-	const TMap<FGuid, AUWActorBase*>& GetSpawnedActors()
+	const TMap<FGuid, TObjectPtr<AUWActorBase>>& GetSpawnedActors()
 	{
 		return SpawnedActors;
 	}
@@ -70,7 +70,7 @@ private:
 
 private:
 	UPROPERTY(Transient)
-	TMap<FGuid, AUWActorBase*> SpawnedActors;
+	TMap<FGuid, TObjectPtr<AUWActorBase>> SpawnedActors;
 
 	FDelegateHandle OnUpdateWorldContextHandle;
 };

@@ -56,10 +56,10 @@ void UUWGameWorldContextManager::Update()
 	TArray<FPromptActorInfo> ActorInfos;
 
 	UUWGameActorManager& GameActorManager = UW::Get<UUWGameActorManager>();
-	for (const TPair<FGuid, AUWActorBase*>& Pair : GameActorManager.GetSpawnedActors())
+	for (const TPair<FGuid, TObjectPtr<AUWActorBase>>& Pair : GameActorManager.GetSpawnedActors())
 	{
 		const FGuid& Id = Pair.Key;
-		if (const AUWActorBase* Actor = Pair.Value)
+		if (const TObjectPtr<AUWActorBase> Actor = Pair.Value)
 		{
 			const FString& StateTypeString = UWUtils::EnumToString(Actor->GetStateType());
 			const FString& ClassTypeString = UWUtils::EnumToString(Actor->GetClassType());
@@ -77,7 +77,7 @@ void UUWGameWorldContextManager::Update()
 
 void UUWGameWorldContextManager::OnUpdate_Internal(const FString& InResult)
 {
-	UE_LOG(LogTemp, Log, TEXT("UUWGameWorldContextManager >>> OnUpdate_Internal() : %s"), *InResult);
+	//UE_LOG(LogTemp, Log, TEXT("UUWGameWorldContextManager >>> OnUpdate_Internal() : %s"), *InResult);
 
 	TArray<FLLMCommand> OutParsedCommands;
 	if (CommandParser->Parse(InResult, OutParsedCommands))

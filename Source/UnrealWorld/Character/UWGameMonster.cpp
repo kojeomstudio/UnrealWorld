@@ -3,6 +3,7 @@
 
 #include "UWGameMonster.h"
 #include "Runtime/Engine/Classes/Components/SkeletalMeshComponent.h"
+#include "Runtime/Engine/Classes/GameFramework/CharacterMovementComponent.h"
 
 // Sets default values
 AUWGameMonster::AUWGameMonster()
@@ -12,6 +13,7 @@ AUWGameMonster::AUWGameMonster()
 
 	MainSkeletalMeshComp = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("MainSkeletalMeshComp"));
 
+	// test code.
 	SubParts_000 = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("SubSkeletalMeshComp_Parts000"));
 	SubParts_001 = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("SubSkeletalMeshComp_Parts001"));
 	SubParts_World = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("SubSkeletalMeshComp_PartsWorld"));
@@ -22,9 +24,16 @@ AUWGameMonster::AUWGameMonster()
 	SubParts_World->SetupAttachment(MainSkeletalMeshComp, AttachSocketName);
 
 	SubParts_Lower->SetupAttachment(MainSkeletalMeshComp);
+	// ~test code.
 
 	//SubParts_Lower->SetUsingAbsoluteLocation(true);
 	SubParts_Lower->SetUsingAbsoluteRotation(true);
+
+	if (UCharacterMovementComponent* MovementComp = GetCharacterMovement())
+	{
+		MovementComp->bOrientRotationToMovement = true;
+	}
+	bUseControllerRotationYaw = false;
 }
 
 // Called when the game starts or when spawned

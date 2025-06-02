@@ -64,6 +64,9 @@ public:
 	void PlayAnimation(const EActorAnimType InAnimType);
 	void PlayAnimation(UAnimSequenceBase* InAnimSequence, const float InRate = 1.0f);
 
+	// move by ai controller
+	void MoveToLocation(const FVector& Dest, FNavPathSharedPtr* OutPath);
+
 	// setters.
 public:
 	void SetGuId(const FGuid& InGuid)

@@ -25,7 +25,8 @@ public class UnrealWorld : ModuleRules
 			"HTTP" ,
 			"Json",
 			"JsonUtilities",
-            "AIModule"
+            "AIModule",
+            "NavigationSystem"
         });
 		
 		// Uncomment if you are using online features

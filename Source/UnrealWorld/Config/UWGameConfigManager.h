@@ -18,6 +18,9 @@ public:
 
 	static void SetIntValue(const FString& Section, const FString& Key, int32 NewValue);
 
+public:
+	static void ReloadConfig();
+	
 private:
-	static const FString IniFile;  // DefaultGame.ini
+	static const FString DefaultGame_IniFile;  // DefaultGame.ini
 };

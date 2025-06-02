@@ -45,6 +45,8 @@ struct FOllamaResponseParsed
     int32 EvalCount = 0;
     // 출력 생성에 소요된 시간 (나노초 단위)
     int64 EvalDuration = 0;
+    // 추론 영역
+    FString Think;
 };
 
 

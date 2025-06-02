@@ -2,6 +2,7 @@
 
 #include "CoreMinimal.h"
 #include "Runtime/AIModule/Classes/AIController.h"
+#include "Runtime/AIModule/Classes/Navigation/PathFollowingComponent.h"
 #include "UWAIController.generated.h"
 
 UCLASS()

@@ -45,6 +45,9 @@ void UUWNetworkManager::Request_Generate(const FString& InQuery, FOllamaAPIResDe
 	Request->SetVerb("POST");
 	Request->SetHeader(TEXT("Content-Type"), TEXT("application/json"));
 
+	const float TimeOutSec = FGameConfigManager::GetFloatValue(FString(TEXT("OllamaAPI")), FString(TEXT("TimeOutSec")));
+	Request->SetTimeout(TimeOutSec);
+
 	// mapping
 	RequestToCallbackMap.Add(Request, InCallback);
 
@@ -113,6 +116,16 @@ void UUWNetworkManager::OnResponse_Generate(FHttpRequestPtr Request, FHttpRespon
 	RootObject->TryGetNumberField(TEXT("eval_count"), Parsed.EvalCount);
 	RootObject->TryGetNumberField(TEXT("eval_duration"), Parsed.EvalDuration);
 
+#if WITH_EDITOR
+	UE_LOG(LogTemp, Log, TEXT("@@@ Ollama Response Info @@@"));
+
+	double DurationSec = Parsed.TotalDuration / 1000000000.0;
+	const FString DurationStr = FString::Printf(TEXT("%.2f"), DurationSec);  // 소수점 6자리까지 출력
+
+	UE_LOG(LogTemp, Log, TEXT("Model : %s \n Total Duration : %s(sec) \n "), 
+		*Parsed.Model, *DurationStr);
+#endif
+
 	const TArray<TSharedPtr<FJsonValue>>* ContextArray;
 	if (RootObject->TryGetArrayField(TEXT("context"), ContextArray))
 	{
@@ -134,12 +147,41 @@ void UUWNetworkManager::OnResponse_Generate(FHttpRequestPtr Request, FHttpRespon
 		return;
 	}
 
+	// <think> 태그 처리
+	FString ModelThink;
+	const FString ThinkStart = TEXT("<think>");
+	const FString ThinkEnd = TEXT("</think>");
+	int32 StartIndex, EndIndex;
+
+	if (Parsed.Response.FindChar('<', StartIndex) && Parsed.Response.Find(ThinkStart, ESearchCase::IgnoreCase, ESearchDir::FromStart, StartIndex) != INDEX_NONE)
+	{
+		StartIndex = Parsed.Response.Find(ThinkStart);
+		EndIndex = Parsed.Response.Find(ThinkEnd, ESearchCase::IgnoreCase, ESearchDir::FromStart, StartIndex);
+
+		if (StartIndex != INDEX_NONE && EndIndex != INDEX_NONE && EndIndex > StartIndex)
+		{
+			int32 ContentStart = StartIndex + ThinkStart.Len();
+			int32 ContentLen = EndIndex - ContentStart;
+
+			// 추출
+			ModelThink = Parsed.Response.Mid(ContentStart, ContentLen);
+
+			// 제거
+			Parsed.Response.RemoveAt(StartIndex, (EndIndex + ThinkEnd.Len()) - StartIndex);
+		}
+	}
+	Parsed.Think = ModelThink;
+
 	// 마크다운 제거
 	Parsed.Response.ReplaceInline(TEXT("```json\n"), TEXT(""));
 	Parsed.Response.ReplaceInline(TEXT("```"), TEXT(""));
 	Parsed.Response.TrimStartAndEndInline();
 
-	UE_LOG(LogTemp, Log, TEXT("Ollama Cleaned Response >>> %s"), *Parsed.Response);
+	if (Parsed.Think.IsEmpty() == false)
+	{
+		UE_LOG(LogTemp, Log, TEXT("Ollama Modle-Think >>> %s"), *Parsed.Think);
+	}
+	UE_LOG(LogTemp, Log, TEXT("Ollama Response >>> %s"), *Parsed.Response);
 
 	// 파싱된 JSON 응답을 delegate로 전달
 	if (FOllamaAPIResDelegate* Find = RequestToCallbackMap.Find(Request))

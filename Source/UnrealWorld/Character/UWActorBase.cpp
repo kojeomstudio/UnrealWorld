@@ -5,6 +5,7 @@
 #include "Runtime/Engine/Classes/Components/SkeletalMeshComponent.h"
 #include "Runtime/AIModule/Classes/BrainComponent.h"
 #include "UnrealWorld/AI/UWAIController.h"
+#include "UnrealWorld/Common/UWUtils.h"
 
 // Sets default values
 AUWActorBase::AUWActorBase(const FObjectInitializer& ObjectInitializer /*= FObjectInitializer::Get()*/)
@@ -128,3 +129,23 @@ void AUWActorBase::PlayAnimation(UAnimSequenceBase* InAnimSequence, const float 
     }
 }
 
+void AUWActorBase::MoveToLocation(const FVector& Dest, FNavPathSharedPtr* OutPath)
+{
+    if (AUWAIController* AIController = Cast<AUWAIController>(GetController()))
+    {
+        FAIMoveRequest Request;
+        Request.SetGoalLocation(Dest);
+        Request.SetAcceptanceRadius(50.f);
+
+        //FNavPathSharedPtr NavPath;
+        FPathFollowingRequestResult ReqResult = AIController->MoveTo(Request, OutPath);
+
+        if (UPathFollowingComponent* PathFollowingComp = AIController->GetPathFollowingComponent())
+        {
+            EPathFollowingStatus::Type Status = PathFollowingComp->GetStatus();
+            //UE_LOG(LogTemp, Log, TEXT("AUWActorBase >>> MoveToLocation() Path Following Status: %s"), *UWUtils::EnumToString(Status));
+        }
+
+        //UE_LOG(LogTemp, Log, TEXT("AUWActorBase >>> MoveToLocation() Code : %s, MoveId : %s"), *UWUtils::EnumToString(ReqResult.Code.GetValue()), *ReqResult.MoveId.ToString());
+    }
+}

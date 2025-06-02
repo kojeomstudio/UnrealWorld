@@ -11,8 +11,8 @@ Your task is to reason and infer the most appropriate next action for each actor
 - "Attack"
 - "Patrol"
 - "Idle"
-- "Speak"
-- "Move"
+- "SpeakTo"
+- "MoveTo"
 
 The chosen action must take into account both:
 1. The actor¡¯s current state.
@@ -23,7 +23,7 @@ Actors may occasionally behave in unexpected or creative ways. For example, a Ma
 Only respond in the JSON format described below.
 
 Restriction:
-Respond with the following JSON structure:
+1. Respond with the following JSON structure:
 
 {
   "Decisions": [
@@ -37,7 +37,8 @@ Respond with the following JSON structure:
   ]
 }
 
-Do not include any text outside this JSON structure.
+2. Do not include any text outside this JSON structure.
+3. You must choose an Action **strictly** from the list provided above. Do not invent or infer any other actions outside of the given list.
 )");
 }
 

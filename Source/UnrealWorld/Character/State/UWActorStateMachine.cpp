@@ -50,7 +50,7 @@ void FUWActorStateMachine::ChangeState(const EActorStateType InStateType)
 #if WITH_EDITOR
 		UWUtils::DebugLogToScreen(
 			FString::Printf(TEXT("[Actor StateMachine] \n UId : %s \n State : %s"),
-				*(OwnerActor->GetGuId().ToString()), *UWUtils::EnumToString(InStateType)), 1, 5.0f,	FColor::Emerald);
+				*(OwnerActor->GetGuId().ToString()), *UWUtils::EnumToString(InStateType)), OwnerActor->GetGuId().A, 10.0f,	FColor::Emerald);
 #endif
 	}
 	else

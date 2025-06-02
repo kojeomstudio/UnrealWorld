@@ -62,7 +62,7 @@ void AUnrealWorldInGameMode::StartPlay()
 			this,
 			&AUnrealWorldInGameMode::UpdateContext,
 			IntervalTimeSec,
-			true
+			true, 0.0f
 		);
 	}
 }

@@ -56,41 +56,54 @@ void AUWPlayerCharacter::Serialize(FArchive& Ar)
 
 void AUWPlayerCharacter::OnMoveForward(float Value)
 {
-	if (Value != 0.0f)
+	if (FMath::IsNearlyZero(Value))
 	{
-		FVector Direction = FRotationMatrix(UW::Get<UUWGameCameraManager>().GetCameraRotation()).GetScaledAxis(EAxis::X);
-		Direction.Z = 0.0f;
-
-		AddMovementInput(Direction, Value * MoveSpeed * GetWorld()->GetDeltaSeconds());
-
-		if (Value < 0.0f)
-		{
-			Direction *= Value;
-		}
-		
-		FRotator NewRotation = Direction.Rotation();
-		SetActorRotation(FQuat::Slerp(GetActorRotation().Quaternion(), NewRotation.Quaternion(), 0.2f));
+		return;
 	}
+
+	FVector Direction = FRotationMatrix(UW::Get<UUWGameCameraManager>().GetCameraRotation()).GetScaledAxis(EAxis::X);
+	Direction.Z = 0.0f;
+	Direction.Normalize();
+
+	AddMovementInput(Direction, Value * MoveSpeed * GetWorld()->GetDeltaSeconds());
+
+	FVector FacingDirection = Direction;
+	if (Value < 0.0f)
+	{
+		FacingDirection *= -1.0f;
+	}
+
+	FRotator TargetRotation = FacingDirection.Rotation();
+	FRotator NewRotation = FMath::RInterpTo(GetActorRotation(), TargetRotation, GetWorld()->GetDeltaSeconds(), 10.0f);
+
+	SetActorRotation(NewRotation);
 }
 
 void AUWPlayerCharacter::OnMoveRight(float Value)
 {
-	if (Value != 0.0f)
+	if (FMath::IsNearlyZero(Value))
 	{
-		FVector Direction = FRotationMatrix(UW::Get<UUWGameCameraManager>().GetCameraRotation()).GetScaledAxis(EAxis::Y);
-		Direction.Z = 0.0f;
-
-		AddMovementInput(Direction, Value * MoveSpeed * GetWorld()->GetDeltaSeconds());
-
-		if (Value < 0.0f)
-		{
-			Direction *= Value;
-		}
-
-		FRotator NewRotation = Direction.Rotation();
-		SetActorRotation(FQuat::Slerp(GetActorRotation().Quaternion(), NewRotation.Quaternion(), 0.2f));
+		return;
 	}
+
+	FVector Direction = FRotationMatrix(UW::Get<UUWGameCameraManager>().GetCameraRotation()).GetScaledAxis(EAxis::Y);
+	Direction.Z = 0.0f;
+	Direction.Normalize();
+
+	AddMovementInput(Direction, Value * MoveSpeed * GetWorld()->GetDeltaSeconds());
+
+	FVector FacingDirection = Direction;
+	if (Value < 0.0f)
+	{
+		FacingDirection *= -1.0f;
+	}
+
+	FRotator TargetRotation = FacingDirection.Rotation();
+	FRotator NewRotation = FMath::RInterpTo(GetActorRotation(), TargetRotation, GetWorld()->GetDeltaSeconds(), 10.0f);
+
+	SetActorRotation(NewRotation);
 }
+
 
 void AUWPlayerCharacter::OnTouchPressed(ETouchIndex::Type InIndex, FVector InLocation)
 {

@@ -55,18 +55,46 @@ void UUWGameActorManager::Spawn_Test()
 {
 	UUWGameBPAsset& BPAsset = UW::GetDataAsset<UUWGameBPAsset>();
 
-	FSpawnParams_Internal Test_SpawnParam0;
+	auto MakeSpawnParam_Internal = [&BPAsset](int32 InRandSeed, EActorClassType InClassType) -> FSpawnParams_Internal
+	{
+		FRandomStream RandomStream;
+		RandomStream.Initialize(InRandSeed);
 
-	Test_SpawnParam0.Class = BPAsset.NpcAsset.DefaultAsset.LoadSynchronous();
-	Test_SpawnParam0.Location = FVector::ZeroVector;
-	Test_SpawnParam0.Rotation = FRotator::ZeroRotator;
-	Test_SpawnParam0.ActorClassType = BPAsset.NpcAsset.DefaultClass;
-	Test_SpawnParam0.IdleAnim = BPAsset.NpcAsset.IdleAnim;
-	Test_SpawnParam0.WalkAnim = BPAsset.NpcAsset.WalkAnim;
-	Test_SpawnParam0.RunAnim = BPAsset.NpcAsset.RunAnim;
-	Test_SpawnParam0.AttackAnim = BPAsset.NpcAsset.AttackAnim;
+		FSpawnParams_Internal Test_SpawnParam0;
 
-	Spawn_Internal(Test_SpawnParam0);
+		FActorBPData TargetBPData;
+		if (InClassType == EActorClassType::Fighter)
+		{
+			TargetBPData = BPAsset.NpcAsset;
+		}
+		else if (InClassType == EActorClassType::Novice)
+		{
+			TargetBPData = BPAsset.NoviceNpcAsset;
+		}
+		Test_SpawnParam0.Class = TargetBPData.DefaultAsset.LoadSynchronous();
+
+		FVector SpawnLocation = FVector::ZeroVector;
+		SpawnLocation.Z += 100.0f;
+		SpawnLocation.X += RandomStream.FRandRange(-600.0f, 700.0f);
+		SpawnLocation.Y += RandomStream.FRandRange(-600.0f, 700.0f);
+
+		Test_SpawnParam0.Location = SpawnLocation;
+		Test_SpawnParam0.Rotation = FRotator::ZeroRotator;
+		Test_SpawnParam0.ActorClassType = TargetBPData.DefaultClass;
+		Test_SpawnParam0.IdleAnim = TargetBPData.IdleAnim;
+		Test_SpawnParam0.WalkAnim = TargetBPData.WalkAnim;
+		Test_SpawnParam0.RunAnim = TargetBPData.RunAnim;
+		Test_SpawnParam0.AttackAnim = TargetBPData.AttackAnim;
+
+		return Test_SpawnParam0;
+	};
+
+	Spawn_Internal(MakeSpawnParam_Internal(1, EActorClassType::Fighter));
+	Spawn_Internal(MakeSpawnParam_Internal(32167, EActorClassType::Fighter));
+	Spawn_Internal(MakeSpawnParam_Internal(9980, EActorClassType::Fighter));
+	Spawn_Internal(MakeSpawnParam_Internal(12345, EActorClassType::Fighter));
+	Spawn_Internal(MakeSpawnParam_Internal(5000, EActorClassType::Novice));
+	Spawn_Internal(MakeSpawnParam_Internal(8080, EActorClassType::Novice));
 }
 #endif
 

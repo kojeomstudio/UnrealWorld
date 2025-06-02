@@ -43,6 +43,16 @@ public:
 	virtual void Start() override;
 	virtual void Tick(float DeltaTime) override;
 	virtual void End() override;
+
+private:
+	/** List of patrol target positions */
+	TArray<FVector> PatrolPoints;
+
+	/** Index of the current patrol target */
+	int32 CurrentTargetIndex = 0;
+
+	/** Move the actor to the current patrol target */
+	void MoveToCurrentTarget();
 };
 
 struct FMoveToState : public FActorStateBase

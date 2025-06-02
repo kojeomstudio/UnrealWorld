@@ -3,12 +3,19 @@
 
 #include "UWGameNpc.h"
 #include "Runtime/Engine/Classes/Components/SkeletalMeshComponent.h"
+#include "Runtime/Engine/Classes/GameFramework/CharacterMovementComponent.h"
 
 // Sets default values
 AUWGameNpc::AUWGameNpc()
 {
  	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
+
+	if (UCharacterMovementComponent* MovementComp = GetCharacterMovement())
+	{
+		MovementComp->bOrientRotationToMovement = true;
+	}
+	bUseControllerRotationYaw = false;
 }
 
 // Called when the game starts or when spawned

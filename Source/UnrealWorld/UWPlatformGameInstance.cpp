@@ -19,6 +19,7 @@
 #include "UnrealWorld/UWPlayerController.h"
 
 #include "UnrealWorld/Config/UWGameIniConfig.h"
+#include "UnrealWorld/Config/UWGameConfigManager.h"
 
 
 
@@ -34,6 +35,9 @@ void UUWPlatformGameInstance::Init()
 
 	InitManagers();
 	InitDataAssets();
+
+	//
+	FGameConfigManager::ReloadConfig();
 
 	TickDelegateHandle.Reset();
 	TickDelegateHandle = FTSTicker::GetCoreTicker().AddTicker(FTickerDelegate::CreateUObject(this, &UUWPlatformGameInstance::TickProcess));
